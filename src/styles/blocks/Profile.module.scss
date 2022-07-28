@@ -1,0 +1,25 @@
+.profile__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    cursor: pointer;
+    background: #444c63;
+    border: 0;
+    padding: 1rem;
+    border: 1px solid #e1e1e1;
+    border-radius: 1rem;
+
+    transition: all .2s linear;
+
+    &:hover {
+        transform: scale(1.02);
+    }
+}
+
+.profile__name {
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: #fff;
+    transition: all .2s linear;
+}

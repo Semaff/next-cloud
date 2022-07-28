@@ -1,0 +1,61 @@
+.leftbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+
+    width: 100%;
+    max-width: 22rem;
+    height: 100%;
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    background-color: #444c63;
+}
+
+.leftbar__header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.leftbar__logo {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.leftbar__list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    list-style: none;
+}
+
+.leftbar__item {
+    font-size: 1.6rem;
+    color: #8692b2;
+    transition: color 0.2s linear;
+
+    a {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        text-decoration: none;
+        color: inherit;
+    }
+
+    &:hover,
+    &.active {
+        color: #ffffff;
+    }
+}
+
+.leftbar__footer {
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: #8692b2;
+}
