@@ -1,0 +1,67 @@
+html,
+body {
+    scroll-behavior: smooth;
+    font-family: "Open Sans", sans-serif;
+}
+
+html {
+    font-size: 10px;
+}
+
+body {
+    height: 100vh;
+    background: url(../public/bg.png) center no-repeat;
+    background-size: cover;
+}
+
+*,
+*::after,
+*::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/*
+  Misc
+*/
+
+.logo {
+    text-align: center;
+}
+
+.arrow {
+    width: 8px;
+    height: 8px;
+    border-left: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #d5daea;
+    transform: rotate(-45deg) translateY(-50%);
+}
+
+/*
+  Container / Main properties
+*/
+
+.main {
+    width: 100%;
+    max-width: 140rem;
+    height: 90vh;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+}
+
+.container {
+    padding: 1rem;
+    padding-left: 23rem;
+}
+
+@import "./buttons";
+@import "./scrollbar";
+@import "./inputs";
+@import "./helpers";

@@ -1,0 +1,68 @@
+.form {
+    background-color: #fff;
+    width: 100%;
+    max-width: 40rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    border-radius: 1rem;
+}
+
+.input-placeholder {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.input {
+    padding: 1rem;
+    border: 1px solid #e1e1e1;
+    width: 100%;
+    max-width: 40rem;
+    border-radius: 1rem;
+
+    font-family: inherit;
+    font-size: 1.4rem;
+    color: #000;
+
+    &::placeholder {
+        font-family: inherit;
+        color: #8692b2;
+    }
+}
+
+.label {
+    font-size: 1.4rem;
+    font-family: inherit;
+}
+
+.input-file {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+.label-file {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    cursor: pointer;
+    background: none;
+    border: 0;
+
+    font-size: 1.6rem;
+    color: #364760;
+
+    &:hover {
+        svg {
+            transition: transform 0.3s linear;
+            transform: scale(1.2);
+        }
+    }
+}
