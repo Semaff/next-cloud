@@ -1,0 +1,15 @@
+.flexContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f1f0f0;
+}
+
+.title {
+    margin: 2rem 0;
+    font-size: 1.8rem;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    color: #364760;
+}

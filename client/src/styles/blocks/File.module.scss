@@ -1,0 +1,92 @@
+.file {
+    width: 100%;
+    max-width: 10rem;
+    border-radius: 5px;
+    position: relative;
+
+    &.active {
+        &::after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+
+            content: "";
+            display: block;
+            border-radius: 5px;
+            width: 100%;
+            height: 100%;
+            border: 1px solid #000;
+            background: rgba(#000, 0.6);
+        }
+    }
+}
+
+.file__name {
+    line-break: anywhere;
+    color: #444c63;
+    font-size: 1.3rem;
+}
+
+.file__image {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+
+    img {
+        object-fit: cover;
+    }
+
+    &:hover {
+        .file__overlay {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+}
+
+.file__size {
+    font-size: 1.2rem;
+    color: #9aa1b6;
+}
+
+.file__overlay {
+    visibility: hidden;
+    opacity: 0;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(#000, 0.6);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.2s linear;
+
+    button {
+        cursor: pointer;
+        background: none;
+        border: 0;
+
+        svg {
+            fill: white;
+        }
+    }
+}
+
+.file__grid {
+    overflow-y: scroll;
+    height: 80%;
+    margin: 1rem 0;
+}
+
+.file__grid_inner {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 2rem;
+}

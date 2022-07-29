@@ -1,0 +1,12 @@
+.info {
+    font-size: 1.2rem;
+    font-weight: 500;
+
+    a {
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
