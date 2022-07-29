@@ -1,6 +1,6 @@
 # next-cloud
 
-A cloud database made on Next.js + Node.js/Express/Sequelize (PostreSQL)
+A cloud database made by Next.js + Node.js/Express/Sequelize (PostreSQL)
 
 ![image](https://user-images.githubusercontent.com/95703321/181779938-6350359f-91bc-4b0c-b977-691de784f38a.png)
 
