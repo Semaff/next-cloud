@@ -1,8 +1,13 @@
 import { AxiosError } from "axios";
+import { useRouter } from "next/router";
 import { authRequest } from "../api/requests";
+import FileService from "../services/FileService";
+import FolderService from "../services/FolderService";
 import { TFile } from "../types/TFile";
+import { encodePath } from "../utils/encodePath";
 import DeleteSVG from "./SVG/DeleteSVG";
 import DownloadSVG from "./SVG/DownloadSVG";
+import FolderSVG from "./SVG/FolderSVG";
 
 interface ActionButtonsProps {
     selectedFiles: TFile[];
@@ -13,38 +18,33 @@ interface ActionButtonsProps {
 }
 
 const ActionButtons = ({ selectedFiles, setFiles, setSelectedFiles, setNotifyText, setNotifyError }: ActionButtonsProps) => {
+    const router = useRouter();
     const btnStyles = ["upload-file"];
-    if (selectedFiles.length > 0) {
-        btnStyles.push("available");
-    }
+    if (selectedFiles.length > 0) btnStyles.push("available");
 
     const downloadFiles = () => {
-        let timeout = 100;
-        for (let i = 0; i < selectedFiles.length; i++) {
-            const file = selectedFiles[i];
-
-            setTimeout(() => {
-                const link = document.createElement("a");
-                link.setAttribute("download", file.name);
-                link.href = "http://localhost:5000/db/" + file.path;
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-            }, timeout)
-            timeout += 100;
-        }
+        FileService.downloadFiles(selectedFiles);
     }
 
     const deleteFiles = async () => {
         try {
-            for (let i = 0; i < selectedFiles.length; i++) {
-                const file = selectedFiles[i];
-                await authRequest.delete("api/file/delete/" + file.id)
-            }
-            const response = await authRequest.get("api/file/getall");
+            await FileService.deleteFiles(selectedFiles);
             setNotifyText("Files deleted!");
-            setFiles(response.data);
+
+            const updatedFiles = await FileService.getAllFiles();
+            setFiles(updatedFiles);
             setSelectedFiles([]);
+        } catch (err: AxiosError | any) {
+            setNotifyError("Error: " + err.response.data.message);
+        }
+    }
+
+    const createFolder = async () => {
+        try {
+            const path = encodePath(router.pathname);
+            await FolderService.createFolder(path, "Folder");
+            const folders = await FolderService.getAllFolders(path);
+            setNotifyText("Folder created!");
         } catch (err: AxiosError | any) {
             setNotifyError("Error: " + err.response.data.message);
         }
@@ -52,11 +52,29 @@ const ActionButtons = ({ selectedFiles, setFiles, setSelectedFiles, setNotifyTex
 
     return (
         <div className="gap">
-            <button onClick={downloadFiles} type="button" className={btnStyles.join(" ")}>
+            <button
+                onClick={createFolder}
+                type="button"
+                className={["upload-file", "available"].join(" ")}
+            >
+                <FolderSVG /> New Folder
+            </button>
+
+            <button
+                onClick={downloadFiles}
+                type="button"
+                className={btnStyles.join(" ")}
+                disabled={selectedFiles.length === 0}
+            >
                 <DownloadSVG /> Download
             </button>
 
-            <button onClick={deleteFiles} type="button" className={btnStyles.join(" ")}>
+            <button
+                onClick={deleteFiles}
+                type="button"
+                className={btnStyles.join(" ")}
+                disabled={selectedFiles.length === 0}
+            >
                 <DeleteSVG /> Delete
             </button>
         </div>

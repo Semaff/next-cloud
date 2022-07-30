@@ -1,6 +1,7 @@
 import { TFile } from "../types/TFile";
 import DownloadSVG from "./SVG/DownloadSVG";
 import styles from "../styles/blocks/File.module.scss";
+import FileService from "../services/FileService";
 
 interface FileProps {
     file: TFile;
@@ -10,12 +11,7 @@ interface FileProps {
 
 const File = ({ file, selectFile, selectedFiles }: FileProps) => {
     const downloadFile = () => {
-        const link = document.createElement("a");
-        link.setAttribute("download", file.name);
-        link.href = "http://localhost:5000/db/" + file.path;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
+        FileService.downloadFile(file);
     }
 
     const fileStyles = [styles.file];
