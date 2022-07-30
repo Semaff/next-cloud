@@ -1,17 +1,12 @@
+const { User, Folder, File } = require("../models/models");
+const AppError = require("../error/AppError");
+const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { User } = require("../models/models");
-const AppError = require("../error/AppError");
+const FolderService = require("../services/FolderService");
+const UserService = require("../services/UserService");
 
-const generateJWT = (id, username) => {
-    return jwt.sign(
-        { id, username },
-        process.env.SECRET_KEY,
-        { expiresIn: '24h' }
-    )
-}
-
-class UserController {  
+class UserController {
     async signup(req, res, next) {
         try {
             const { username, password } = req.body;
@@ -26,8 +21,14 @@ class UserController {
 
             const hashPassword = await bcrypt.hash(password, 5);
             const user = await User.create({ username, password: hashPassword });
-            const token = generateJWT(user.id, user.username)
+            const token = UserService.generateJWT(user.id, user.username);
 
+            const rootFolder = FolderService.getRootFolder(user.id);
+            await Folder.create({
+                name: user.id,
+                userId: user.id,
+                path: rootFolder
+            });
             return res.json({ token: token })
         } catch (err) {
             next(AppError.badRequest(err.message));
@@ -48,7 +49,7 @@ class UserController {
                 throw new Error('Wrong password!');
             }
 
-            const token = generateJWT(user.id, user.username);
+            const token = UserService.generateJWT(user.id, user.username);
             return res.json({ token: token })
         } catch (err) {
             next(AppError.badRequest(err.message));
@@ -64,7 +65,7 @@ class UserController {
                 throw new Error('User does not exist!');
             }
 
-            const token = generateJWT(id, username);
+            const token = UserService.generateJWT(user.id, user.username);
             return res.json({ token: token });
         } catch (err) {
             next(AppError.badRequest(err.message));
@@ -133,6 +134,13 @@ class UserController {
                 throw new Error('User does not found!');
             }
 
+            const rootPath = FolderService.getRootFolder(user.id);
+            fs.rmSync(rootPath, { recursive: true, force: true });
+
+            const folders = await Folder.findAll({ where: { userId: user.id } });
+            const files = await File.findAll({ where: { userId: user.id } });
+            files.forEach(async (file) => await file.destroy());
+            folders.forEach(async (folder) => await folder.destroy());
             await user.destroy();
             return res.json(user);
         } catch (err) {
