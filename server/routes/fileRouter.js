@@ -3,6 +3,7 @@ const router = new Router();
 const fileController = require('../controllers/fileController');
 const checkAuth = require("../middlewares/CheckAuth");
 
+/* File Endpoints */
 router.get("/getall", checkAuth, fileController.getAll);
 router.get("/getone/:id", checkAuth, fileController.getOne);
 
