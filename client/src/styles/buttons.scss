@@ -1,0 +1,83 @@
+@import "./variables";
+
+/* Btn Wrappers */
+.btn-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    &.--diagonal {
+        flex-direction: column;
+    }
+}
+
+/* Btn Extra's */
+.btn.--diagonal {
+    flex-direction: column;
+}
+
+.btn.--filled {
+    color: #fff;
+    background-color: $bg-primary;
+}
+
+.btn.--nofill {
+    padding: 0;
+
+    &:hover,
+    &.active {
+        color: #000;
+        background: unset;
+
+        svg {
+            fill: #000
+        }
+    }
+
+    &:disabled {
+        color: grey;
+        background: unset;
+
+        svg {
+            fill: grey;
+        }
+    }
+}
+
+/* Standart Button */
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    cursor: pointer;
+    background: none;
+    border: 0;
+    padding: 0.8rem 1rem;
+    border-radius: 0.6rem;
+
+    color: $secondary;
+    font-family: $ff-primary;
+    font-size: 1.6rem;
+
+    transition: all 0.2s linear;
+
+    &:hover,
+    &.active {
+        color: #fff;
+        background: #444c63;
+
+        svg {
+            fill: #fff;
+        }
+    }
+
+    &:disabled {
+        color: #fff;
+        background-color: grey;
+
+        svg {
+            fill: grey;
+        }
+    }
+}

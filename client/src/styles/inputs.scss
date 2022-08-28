@@ -1,0 +1,29 @@
+@import "./variables";
+
+/* Inputs */
+.input-wrapper {
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+}
+
+.input-placeholder {
+    width: 100%;
+}
+
+.input {
+    padding: 1rem;
+    border: 1px solid #e1e1e1;
+    width: 100%;
+    border-radius: 0.5rem;
+    flex-shrink: 0;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 1.4rem;
+    color: #000;
+
+    &::placeholder {
+        font-family: inherit;
+        color: $placeholder;
+    }
+}

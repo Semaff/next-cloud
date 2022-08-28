@@ -1,15 +1,35 @@
-.space-between {
+/* Flex Helpers */
+.flex {
     display: flex;
+}
+
+.align-center {
     align-items: center;
+}
+
+.jc-c { // justify-content: center
+    justify-content: center;
+}
+
+.jc-sb { // justify-content: space-between
     justify-content: space-between;
 }
 
-.gap {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+.flex-dir-column {
+    flex-direction: column;
 }
 
+/* Gaps */
+.gap10 {
+    gap: 10px;
+}
+
+/* Text Helpers */
+.text-align-center {
+    text-align: center;
+}
+
+/* Other */
 .--border-bottom {
     padding-bottom: 1rem;
     border-bottom: 1px solid #e1e1e1;

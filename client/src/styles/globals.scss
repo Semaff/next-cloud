@@ -1,7 +1,10 @@
+@import "./variables";
+@import "./helpers";
+
 html,
 body {
     scroll-behavior: smooth;
-    font-family: "Open Sans", sans-serif;
+    font-family: "Montserrat", sans-serif;
 }
 
 html {
@@ -22,13 +25,39 @@ body {
     box-sizing: border-box;
 }
 
+/* Container properties */
+.main {
+    width: 100%;
+    max-width: 140rem;
+    height: 100%;
+    max-height: 90rem;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(#000, 0.5);
+
+    &.--small {
+        max-width: 50rem;
+        border-radius: 1rem;
+        height: unset;
+    }
+
+    &.--padding {
+        padding: 4rem 2rem;
+    }
+}
+
+.container {
+    padding-left: $leftbar-width;
+}
+
 /*
   Misc
 */
-
-.logo {
-    text-align: center;
-}
 
 .arrow {
     width: 8px;
@@ -75,45 +104,7 @@ body {
     }
 }
 
-/*
-  Container / Main properties
-*/
-
-.main {
-    width: 100%;
-    max-width: 140rem;
-    height: 90vh;
-
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 1;
-    transform: translate(-50%, -50%);
-    background-color: #fff;
-
-    &.--small {
-        max-width: 50rem;
-        padding: 6rem 2rem;
-        border-radius: 1rem;
-        height: unset;
-    }
-
-    &.--center {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-    }
-}
-
-.container {
-    padding: 1rem;
-    padding-left: 23rem;
-    height: 100%;
-}
-
 @import "./buttons";
-@import "./scrollbar";
 @import "./inputs";
-@import "./helpers";
+@import "./forms";
+@import "./labels";
