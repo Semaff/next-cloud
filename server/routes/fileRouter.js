@@ -9,7 +9,7 @@ router.get("/getone/:id", checkAuthMiddleware, fileController.getOne);
 
 router.post("/createFolder", checkAuthMiddleware, fileController.createFolder);
 router.post("/uploadFile", checkAuthMiddleware, fileController.uploadFile);
-router.put('/update/:id', checkAuthMiddleware, fileController.update);
+router.put('/rename/:id', checkAuthMiddleware, fileController.rename);
 router.delete('/delete/:id', checkAuthMiddleware, fileController.delete);
 
 module.exports = router
