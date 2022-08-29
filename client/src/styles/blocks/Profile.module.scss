@@ -3,63 +3,6 @@
     margin-left: auto;
 }
 
-.profile__header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-
-    cursor: pointer;
-    background: #444c63;
-    border: 0;
-    padding: 1rem;
-    border: 1px solid #e1e1e1;
-    border-radius: 1rem;
-
-    transition: all 0.2s linear;
-
-    &:hover {
-        transform: scale(1.02);
-    }
-}
-
-.profile__name {
-    font-size: 1.6rem;
-    font-weight: 500;
-    color: #fff;
-    transition: all 0.2s linear;
-}
-
-.profile__modal {
-    position: absolute;
-    right: 0;
-    top: 110%;
-    transform: translate(-0%);
-    padding: 0.8rem;
-
-    background-color: #fff;
-    border-radius: 1rem;
-    box-shadow: 0 0 10px 2px rgba(#000, 0.4);
-    width: 28rem;
-
-    visibility: hidden;
-    opacity: 0;
-    transition: all 0.2s linear;
-
-    &.visible {
-        visibility: visible;
-        opacity: 1;
-    }
-}
-
-.logout {
-    margin-top: 1rem;
-
+.profile__logout {
     text-align: center;
-    font-weight: 400;
-    font-size: 1.2rem;
-    cursor: pointer;
-
-    &:hover {
-        text-decoration: underline;
-    }
 }
