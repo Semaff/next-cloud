@@ -3,33 +3,22 @@ const AppError = require("../error/AppError");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const FolderService = require("../services/FolderService");
 const UserService = require("../services/UserService");
 
 class UserController {
     async signup(req, res, next) {
         try {
-            const { username, password } = req.body;
-            if (!username || !password) {
-                throw new Error('Wrong Username or Password');
+            const { firstname, lastname, email, password } = req.body;
+            if (!firstname || !lastname || !email || !password) {
+                throw new Error('Not enough fields!');
             };
 
-            const candidate = await User.findOne({ where: { username } });
-            if (candidate) {
-                throw new Error('User with that E-mail already exists!');
+            const parsedUser = await UserService.signup(firstname, lastname, email, password);
+            if (parsedUser instanceof Error) {
+                throw new Error(parsedUser.message);
             }
 
-            const hashPassword = await bcrypt.hash(password, 5);
-            const user = await User.create({ username, password: hashPassword });
-            const token = UserService.generateJWT(user.id, user.username);
-
-            const rootFolder = FolderService.getRootFolder(user.id);
-            await Folder.create({
-                name: user.id,
-                userId: user.id,
-                path: rootFolder
-            });
-            return res.json({ token: token })
+            return res.json({ token: parsedUser.token, user: parsedUser.user });
         } catch (err) {
             next(AppError.badRequest(err.message));
         }
@@ -37,36 +26,32 @@ class UserController {
 
     async signin(req, res, next) {
         try {
-            const { username, password } = req.body;
-
-            const user = await User.findOne({ where: { username } });
-            if (!user) {
-                throw new Error('User does not exist!');
+            const { email, password } = req.body;
+            if (!email || !password) {
+                throw new Error("Not enough fields!");
             }
 
-            let comparePassword = bcrypt.compareSync(password, user.password);
-            if (!comparePassword) {
-                throw new Error('Wrong password!');
+            const parsedUser = await UserService.signin(email, password);
+            if (parsedUser instanceof Error) {
+                throw new Error(parsedUser.message);
             }
 
-            const token = UserService.generateJWT(user.id, user.username);
-            return res.json({ token: token })
+            return res.json({ token: parsedUser.token, user: parsedUser.user });
         } catch (err) {
             next(AppError.badRequest(err.message));
         }
     }
 
-    async checkAuth(req, res, next) {
+    async auth(req, res, next) {
         try {
-            const { id, username } = req.user;
+            const { id } = req.user;
 
-            const user = await User.findByPk(id);
-            if (!user) {
-                throw new Error('User does not exist!');
+            const parsedUser = await UserService.auth(id);
+            if (parsedUser instanceof Error) {
+                throw new Error(parsedUser.message);
             }
 
-            const token = UserService.generateJWT(user.id, user.username);
-            return res.json({ token: token });
+            return res.json({ token: parsedUser.token, user: parsedUser.user });
         } catch (err) {
             next(AppError.badRequest(err.message));
         }
@@ -74,7 +59,11 @@ class UserController {
 
     async getAll(req, res, next) {
         try {
-            const users = await User.findAll();
+            const users = await UserService.getAll();
+            if (users instanceof Error) {
+                throw new Error(users.message);
+            }
+
             return res.json(users);
         } catch (err) {
             next(AppError.badRequest(err.message));
@@ -83,13 +72,11 @@ class UserController {
 
     async getOne(req, res, next) {
         try {
-            if (!req.params.id) {
-                throw new Error("Wrong id!");
-            }
+            const { id: userId } = req.params;
 
-            const user = await User.findByPk(req.params.id);
-            if (!user) {
-                throw new Error('User does not exist!')
+            const user = await UserService.getOne(userId);
+            if (user instanceof Error) {
+                throw new Error(user.message);
             }
 
             return res.json(user);
@@ -98,50 +85,32 @@ class UserController {
         }
     }
 
-    async updateOne(req, res, next) {
+    async update(req, res, next) {
         try {
-            if (!req.params.id) {
-                throw new Error('Wrong id!');
+            const { id: userId } = req.params;
+            const { password } = req.body;
+            const { avatar } = req.files;
+
+            const user = await UserService.update(userId, password, avatar);
+            if (user instanceof Error) {
+                throw new Error(user.message);
             }
 
-            const user = await User.findByPk(req.params.id);
-            if (!user) {
-                throw new Error('User does not found!');
-            }
-
-            let comparePassword = bcrypt.compareSync(req.body.password, user.password);
-            if (comparePassword) {
-                throw new Error('Password is the same as old!');
-            }
-
-            const password = req.body.password || user.password;
-            const hashPassword = await bcrypt.hash(password, 5);
-            await user.update({ password: hashPassword });
             return res.json(user);
         } catch (err) {
             next(AppError.badRequest(err.message));
         }
     }
 
-    async deleteOne(req, res, next) {
+    async delete(req, res, next) {
         try {
-            if (!req.params.id) {
-                throw new Error('Wrong id!');
+            const { id: userId } = req.params;
+
+            const user = await UserService.delete(userId);
+            if (user instanceof Error) {
+                throw new Error(user.message);
             }
 
-            const user = await User.findByPk(req.params.id);
-            if (!user) {
-                throw new Error('User does not found!');
-            }
-
-            const rootPath = FolderService.getRootFolder(user.id);
-            fs.rmSync(rootPath, { recursive: true, force: true });
-
-            const folders = await Folder.findAll({ where: { userId: user.id } });
-            const files = await File.findAll({ where: { userId: user.id } });
-            files.forEach(async (file) => await file.destroy());
-            folders.forEach(async (folder) => await folder.destroy());
-            await user.destroy();
             return res.json(user);
         } catch (err) {
             next(AppError.badRequest(err.message));
