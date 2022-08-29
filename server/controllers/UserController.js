@@ -1,8 +1,4 @@
-const { User, Folder, File } = require("../models/models");
 const AppError = require("../error/AppError");
-const fs = require("fs");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 const UserService = require("../services/UserService");
 
 class UserController {
