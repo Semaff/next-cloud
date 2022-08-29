@@ -1,14 +1,15 @@
 const Router = require("express");
 const router = new Router();
 const fileController = require('../controllers/fileController');
-const checkAuth = require("../middlewares/CheckAuth");
+const checkAuthMiddleware = require("../middlewares/checkAuthMiddleware");
 
 /* File Endpoints */
-router.get("/getall", checkAuth, fileController.getAll);
-router.get("/getone/:id", checkAuth, fileController.getOne);
+router.get("/getall", checkAuthMiddleware, fileController.getAll);
+router.get("/getone/:id", checkAuthMiddleware, fileController.getOne);
 
-router.post("/create", checkAuth, fileController.create);
-router.put('/update/:id', checkAuth, fileController.updateOne);
-router.delete('/delete/:id', checkAuth, fileController.deleteOne);
+router.post("/createFolder", checkAuthMiddleware, fileController.createFolder);
+router.post("/uploadFile", checkAuthMiddleware, fileController.uploadFile);
+router.put('/update/:id', checkAuthMiddleware, fileController.update);
+router.delete('/delete/:id', checkAuthMiddleware, fileController.delete);
 
 module.exports = router

@@ -1,15 +1,15 @@
 const Router = require("express");
 const router = new Router();
 const userController = require('../controllers/userController');
-const checkAuth = require("../middlewares/CheckAuth");
+const checkAuthMiddleware = require("../middlewares/checkAuthMiddleware");
 
 router.post("/signup", userController.signup); // user registration
 router.post("/signin", userController.signin); // user login
-router.get("/check", checkAuth, userController.checkAuth); // check user auth
+router.get("/auth", checkAuthMiddleware, userController.auth); // check user auth
 
-router.get("/getall", checkAuth, userController.getAll); // get all users
-router.get("/getone/:id", checkAuth, userController.getOne); // check user auth
-router.put('/update/:id', checkAuth, userController.updateOne); // update a user
-router.delete('/delete/:id', checkAuth, userController.deleteOne); // delete a user
+router.get("/getall", checkAuthMiddleware, userController.getAll); // get all users
+router.get("/getone/:id", checkAuthMiddleware, userController.getOne); // check user auth
+router.put('/update/:id', checkAuthMiddleware, userController.update); // update a user
+router.delete('/delete/:id', checkAuthMiddleware, userController.delete); // delete a user
 
 module.exports = router
