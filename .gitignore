@@ -1,7 +1,6 @@
 client/node_modules
 client/.next
 
-server/public
-server/files
+server/src/public
 server/node_modules
 server/.env
