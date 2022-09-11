@@ -1,6 +1,12 @@
 import { Request } from "express";
 import { UploadedFile } from "express-fileupload";
+import { User } from "src/models/UserModel";
 import { JWTUser } from "../../types/JWTUser";
+
+export interface AuthResponse {
+    token: string,
+    user: User
+}
 
 /* Auth Requests */
 export interface SignUpRequest extends Request {
