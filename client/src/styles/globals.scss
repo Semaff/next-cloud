@@ -12,9 +12,9 @@ html {
 }
 
 body {
-    height: 100vh;
     background: url(/bg.png) center no-repeat;
     background-size: cover;
+    height: 100vh;
 }
 
 *,
@@ -37,6 +37,7 @@ body {
     left: 50%;
     z-index: 1;
     transform: translate(-50%, -50%);
+
     background-color: #fff;
     box-shadow: 0 0 10px rgba(#000, 0.5);
 
@@ -55,10 +56,7 @@ body {
     padding-left: $leftbar-width;
 }
 
-/*
-  Misc
-*/
-
+/* Misc */
 .arrow {
     width: 8px;
     height: 8px;
@@ -66,42 +64,6 @@ body {
     border-bottom: 1px solid;
     border-color: #d5daea;
     transform: rotate(-45deg) translateY(-50%);
-}
-
-.upload-file {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-
-    cursor: pointer;
-    background: none;
-    border: 0;
-
-    font-size: 1.6rem;
-    color: grey;
-
-    transition: color 0.2s linear;
-
-    svg {
-        fill: grey;
-        transition: fill 0.2s linear;
-    }
-
-    &.available {
-        color: #364760;
-
-        svg {
-            fill: #000;
-        }
-
-        &:hover {
-            svg {
-                transition: transform 0.3s linear;
-                transform: scale(1.2);
-            }
-        }
-    }
 }
 
 @import "./buttons";
