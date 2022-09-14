@@ -1,12 +1,12 @@
-import { SerializedError } from "@reduxjs/toolkit";
-import { type } from "os";
+import { NextPageContext } from "next";
 import { TUser } from "../../../types/TUser";
 
+/* AuthSlice */
 export interface AuthState {
     user: TUser | null,
     isLoggedIn: boolean,
     isLoading: boolean,
-    error: SerializedError | null
+    error: string | null
 };
 
 export enum AuthActionsEnum {
@@ -16,13 +16,15 @@ export enum AuthActionsEnum {
     SET_ERROR = "SET_ERROR",
 }
 
-/* Actions */
 export type SetUserAction = TUser | null;
 export type SetIsLoggedInAction = boolean;
 export type SetIsLoadingAction = boolean;
-export type SetErrorAction = SerializedError | null;
+export type SetErrorAction = string | null;
 
-/* Thunk Actions */
+/*
+  Client Side Thunk Actions
+  ==========================
+*/
 export interface SignInActionFields {
     email: string,
     password: string
@@ -33,4 +35,20 @@ export interface SignUpActionFields {
     lastname: string,
     email: string,
     password: string
+}
+
+export interface ChangePasswordActionFields {
+    newPassword: string;
+}
+
+export interface UploadAvatarActionFields {
+    file: File
+}
+
+/*
+  Server Side Thunk Actions
+  ==========================
+*/
+export interface AuthActionFields {
+    ctx: NextPageContext
 }

@@ -1,17 +1,17 @@
-import jwtDecode from "jwt-decode";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AxiosError } from "axios";
-import { authRequest, guestRequest } from "../../../api/requests";
-import { TUser } from "../../../types/TUser";
-import { AuthState, SetErrorAction, SetIsLoadingAction, SetIsLoggedInAction, SetUserAction, SignInActionFields, SignUpActionFields } from "./types";
-import { RejectedActionFromAsyncThunk } from "@reduxjs/toolkit/dist/matchers";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AuthState, SetErrorAction, SetIsLoadingAction, SetIsLoggedInAction, SetUserAction } from "./types";
 import { RootState } from "../../store";
+import { AuthResponse } from "../../../types/AuthResponse";
+import { auth, changePassword, deleteAccount, logout, removeAvatar, signin, signup, uploadAvatar } from "./actions";
 
 /* Helper Functions */
-const handleAuth = (state: AuthState, action: PayloadAction<TUser>) => {
-    state.isLoading = false;
-    state.isLoggedIn = true;
-    state.user = action.payload;
+const handleAuth = (state: AuthState, action: PayloadAction<AuthResponse>) => {
+    return {
+        ...state,
+        user: action.payload.user,
+        isLoggedIn: true,
+        isLoading: false
+    }
 }
 
 /* InitialState + Reducer */
@@ -23,7 +23,7 @@ const initialState: AuthState = {
 }
 
 const authSlice = createSlice({
-    name: "user",
+    name: "auth",
     initialState,
     reducers: {
         setUser: (state, action: PayloadAction<SetUserAction>) => {
@@ -34,40 +34,95 @@ const authSlice = createSlice({
             state.isLoggedIn = action.payload;
         },
 
-        setIsLoading: (state, action: PayloadAction<SetIsLoadingAction>) => {
+        setAuthIsLoading: (state, action: PayloadAction<SetIsLoadingAction>) => {
             state.isLoading = action.payload;
         },
 
-        setError: (state, action: PayloadAction<SetErrorAction>) => {
+        setAuthError: (state, action: PayloadAction<SetErrorAction>) => {
             state.error = action.payload;
         },
 
         logout: (state, action: PayloadAction) => {
-            localStorage.removeItem("token");
             state.isLoggedIn = false;
             state.user = null;
         }
     },
     extraReducers(builder) {
         builder
+            /* Auth */
+            .addCase(auth.fulfilled, handleAuth)
+            .addCase(auth.rejected, (state, action) => {
+                state.error = action.error.message || "Unexpected error!";
+                state.isLoading = false;
+            })
+
+            /* Sign In */
             .addCase(signin.fulfilled, handleAuth)
             .addCase(signin.pending, (state, action) => { state.isLoading = true })
             .addCase(signin.rejected, (state, action) => {
-                state.error = action.error;
+                state.error = action.error.message || "Unexpected error!";
                 state.isLoading = false;
             })
 
+            /* Sign Up */
             .addCase(signup.fulfilled, handleAuth)
             .addCase(signup.pending, (state, action) => { state.isLoading = true })
             .addCase(signup.rejected, (state, action) => {
-                state.error = action.error;
+                state.error = action.error.message || "Unexpected error!";
                 state.isLoading = false;
             })
 
-            .addCase(checkAuth.fulfilled, handleAuth)
-            .addCase(checkAuth.pending, (state, action) => { state.isLoading = true })
-            .addCase(checkAuth.rejected, (state, action) => {
-                state.error = action.error;
+            /* Change password */
+            .addCase(changePassword.fulfilled, handleAuth)
+            .addCase(changePassword.pending, (state, action) => { state.isLoading = true })
+            .addCase(changePassword.rejected, (state, action) => {
+                state.error = action.error.message || "Unexpected error!";
+                state.isLoading = false;
+            })
+
+            /* Upload avatar */
+            .addCase(uploadAvatar.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.user = action.payload;
+            })
+            .addCase(uploadAvatar.pending, (state, action) => { state.isLoading = true })
+            .addCase(uploadAvatar.rejected, (state, action) => {
+                state.error = action.error.message || "Unexpected error!";
+                state.isLoading = false;
+            })
+
+            /* Remove Avatar */
+            .addCase(removeAvatar.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.user = action.payload;
+            })
+            .addCase(removeAvatar.pending, (state, action) => { state.isLoading = true })
+            .addCase(removeAvatar.rejected, (state, action) => {
+                state.error = action.error.message || "Unexpected error!";
+                state.isLoading = false;
+            })
+
+            /* Logout */
+            .addCase(logout.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isLoggedIn = false;
+                state.user = null;
+            })
+            .addCase(logout.pending, (state, action) => { state.isLoading = true })
+            .addCase(logout.rejected, (state, action) => {
+                state.error = action.error.message || "Unexpected error!";
+                state.isLoading = false;
+            })
+
+            /* Delete account */
+            .addCase(deleteAccount.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isLoggedIn = false;
+                state.user = null;
+            })
+            .addCase(deleteAccount.pending, (state, action) => { state.isLoading = true })
+            .addCase(deleteAccount.rejected, (state, action) => {
+                state.error = action.error.message || "Unexpected error!";
                 state.isLoading = false;
             })
     }
@@ -76,71 +131,10 @@ const authSlice = createSlice({
 export default authSlice.reducer;
 
 /* Action Creators */
-export const { setUser, setIsLoggedIn, setIsLoading, setError, logout } = authSlice.actions;
+export const { setUser, setIsLoggedIn, setAuthError, setAuthIsLoading } = authSlice.actions;
 
 /* Select Creators */
 export const selectUser = (state: RootState) => state.auth.user;
 export const selectIsLoggedIn = (state: RootState) => state.auth.isLoggedIn;
 export const selectAuthIsLoading = (state: RootState) => state.auth.isLoading;
 export const selectAuthError = (state: RootState) => state.auth.error;
-
-/* Thunk Actions */
-export const signin = createAsyncThunk<TUser, SignInActionFields>("auth/signin", async ({ email, password }) => {
-    try {
-        const response = await guestRequest.post("api/user/signin", { email, password });
-        const token = response.data.token;
-        if (!token) {
-            throw new Error("Server Error!")
-        }
-
-        const user: TUser = jwtDecode(token);
-        localStorage.setItem("token", token);
-        return user;
-    } catch (err) {
-        if (err instanceof AxiosError) {
-            return Promise.reject(`Error: ${err.response?.data.message}`);
-        }
-
-        return Promise.reject(`Error: ${(err as Error)?.message}`);
-    }
-})
-
-export const signup = createAsyncThunk<TUser, SignUpActionFields>("auth/signup", async ({ firstname, lastname, email, password }) => {
-    try {
-        const response = await guestRequest.post("api/user/signup", { firstname, lastname, email, password });
-        const token = response.data.token;
-        if (!token) {
-            throw new Error("Server Error!")
-        }
-
-        const user: TUser = jwtDecode(token);
-        localStorage.setItem("token", token);
-        return user;
-    } catch (err) {
-        if (err instanceof AxiosError) {
-            return Promise.reject(`Error: ${err.response?.data.message}`);
-        }
-
-        return Promise.reject(`Error: ${(err as Error)?.message}`);
-    }
-})
-
-export const checkAuth = createAsyncThunk<TUser>("auth/check", async () => {
-    try {
-        const response = await authRequest.get("api/user/auth");
-        const token = response.data.token;
-        if (!token) {
-            throw new Error("Server Error!")
-        }
-
-        const user: TUser = jwtDecode(token);
-        localStorage.setItem("token", token);
-        return user;
-    } catch (err) {
-        if (err instanceof AxiosError) {
-            return Promise.reject(`Error: ${err.response?.data.message}`);
-        }
-
-        return Promise.reject(`Error: ${(err as Error)?.message}`);
-    }
-})
