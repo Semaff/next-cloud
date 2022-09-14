@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import FileService from "../../services/FileService";
 import { parsePath } from "../../utils/parsePath";
-import { CreateFolderRequest, DeleteRequest, GetAllRequest, GetOneRequest, MoveRequest, RemoveShareRequest, RenameRequest, SearchRequest, ShareRequest, UploadFileRequest } from "./types";
+import { CreateFolderRequest, DeleteRequest, DownloadRequest, GetAllRequest, GetOneRequest, MoveRequest, RemoveShareRequest, RenameRequest, SearchRequest, ShareRequest, UploadFileRequest } from "./types";
 
 class FileController {
     /*
@@ -48,6 +48,16 @@ class FileController {
 
             const file = await FileService.search(userId, query);
             return res.json(file);
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async download(req: DownloadRequest, res: Response, next: NextFunction) {
+        try {
+            const { id: fileId } = req.params;
+            const filePath = await FileService.download(fileId);
+            return res.download(filePath);
         } catch (err) {
             next(err);
         }

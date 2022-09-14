@@ -8,6 +8,7 @@ const router = Router();
 router.get("/getall/:type?", checkAuthMiddleware, fileController.getAll);
 router.get("/getone/:link", fileController.getOne); // get file by it's access link
 router.get("/search", checkAuthMiddleware, fileController.search); // search by query
+router.get("/downloadFile/:id", fileController.download);
 
 router.post("/createFolder", checkAuthMiddleware, fileController.createFolder);
 router.post("/uploadFile", checkAuthMiddleware, fileController.uploadFile);

@@ -68,6 +68,16 @@ class FileService {
         return filteredFiles;
     }
 
+    static async download(fileId: number | string): Promise<string> {
+        const file = await File.findOne({ where: { id: fileId } });
+        if (!file) {
+            throw AppError.badRequest("File doesn't exist!");
+        }
+
+        const rootFilePath = FileSystemService.getRootPath() + "\\" + file.path;
+        return rootFilePath;
+    }
+
     /*
       Create functions
       ==================

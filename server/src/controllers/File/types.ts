@@ -27,6 +27,12 @@ export interface SearchRequest extends Request {
     }
 }
 
+export interface DownloadRequest extends Request {
+    params: {
+        id: string
+    }
+}
+
 /* Create Requests */
 export interface CreateFolderRequest extends Request {
     user: JWTUser,
