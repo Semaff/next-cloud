@@ -1,10 +1,10 @@
 export type TFile = {
     id: string;
     name: string;
-    ext: string;
+    type: string;
     size: number;
     path: string;
-    cover: string;
+    parent: string;
     accessLink: string;
     updatedAt: string;
 }
