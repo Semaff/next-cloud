@@ -1,13 +1,26 @@
 import '../styles/globals.scss'
-import type { AppProps } from 'next/app'
-import { AppWrapper } from '../context/authContext'
+import { wrapper } from '../store/store';
+import { AppContext, AppProps } from 'next/app';
+import { auth } from '../store/slices/auth/actions';
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp = ({ Component, pageProps }: AppProps) => {
     return (
-        <AppWrapper>
-            <Component {...pageProps} />
-        </AppWrapper>
+        <Component {...pageProps} />
     )
 }
 
-export default MyApp
+MyApp.getInitialProps = wrapper.getInitialAppProps(store => async (context: AppContext) => {
+    await store.dispatch(auth({ ctx: context.ctx }));
+
+    return {
+        pageProps: {
+            // Call page-level getInitialProps
+            // DON'T FORGET TO PROVIDE STORE TO PAGE
+            ...(context.Component.getInitialProps ? await context.Component.getInitialProps({ ...context.ctx, store }) : {}),
+            // Some custom thing for all pages
+            pathname: context.ctx.pathname,
+        },
+    };
+});
+
+export default wrapper.withRedux(MyApp);
