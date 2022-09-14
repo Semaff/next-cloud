@@ -1,92 +1,121 @@
+@import "../variables";
+
+.file__drag {
+    position: relative;
+    height: 70rem;
+}
+
+.file__grid {
+    overflow-y: auto;
+    margin: 1rem 0;
+    user-select: none;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, $file-maxwidth);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 0.5rem;
+    height: 70rem;
+}
+
 .file {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    position: relative;
     width: 100%;
-    max-width: 10rem;
+    max-width: $file-maxwidth;
+    padding: 0.5rem;
     border-radius: 5px;
     position: relative;
+    text-align: center;
+    object-fit: cover;
 
-    &.active {
-        &::after {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 10;
-
-            content: "";
-            display: block;
-            border-radius: 5px;
-            width: 100%;
-            height: 100%;
-            border: 1px solid #000;
-            background: rgba(#000, 0.6);
-        }
-    }
-}
-
-.file__name {
-    line-break: anywhere;
-    color: #444c63;
-    font-size: 1.3rem;
-}
-
-.file__image {
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 0.5rem;
+    cursor: default;
+    user-select: none;
 
     img {
         object-fit: cover;
     }
 
+    &::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+
+        content: "";
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        border-radius: 2px;
+        transition: background-color 0.2s linear;
+    }
+
+    &.selected,
     &:hover {
-        .file__overlay {
-            visibility: visible;
-            opacity: 1;
+        &::after {
+            background: rgba(#000, 0.1);
         }
+    }
+
+    &::selection {
+        background-color: transparent;
     }
 }
 
+.file__name,
 .file__size {
-    font-size: 1.2rem;
-    color: #9aa1b6;
+    font-family: $ff-primary;
+    word-break: break-word;
 }
 
-.file__overlay {
-    visibility: hidden;
-    opacity: 0;
+.file__name {
+    color: $secondary;
+    font-size: 1.3rem;
+    font-weight: 500;
+}
 
+.file__size {
+    display: block;
+    font-size: 1.2rem;
+    color: grey;
+}
+
+.file__share {
+    position: absolute;
+    right: 5%;
+    top: 2%;
+}
+
+/* Drag & Drop area */
+.file__drop {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 1;
+
     width: 100%;
     height: 100%;
-    background: rgba(#000, 0.6);
+    background-color: #fff;
+    border: 2px dashed #000;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    transition: all 0.2s linear;
-
-    button {
-        cursor: pointer;
-        background: none;
-        border: 0;
-
-        svg {
-            fill: white;
-        }
-    }
+    cursor: default;
+    font-family: "Montserrat", sans-serif;
+    font-size: 2rem;
+    color: #000;
+    user-select: none;
 }
 
-.file__grid {
-    overflow-y: scroll;
-    height: 80%;
-    margin: 1rem 0;
-}
-
-.file__grid_inner {
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: 2rem;
+/* */
+.mirage {
+    background: rgba(#000, 0.2);
+    border-radius: 0.5rem;
+    transition: background-color 0.2s linear;
+    user-select: none;
 }
