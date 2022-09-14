@@ -1,11 +1,12 @@
 import styles from "../../styles/blocks/Profile.module.scss"
+import MyButton from "../Buttons/MyButton";
+import MiniModal from "../Modal/MiniModal";
+import ChangePasswordForm from "../Forms/ChangePasswordForm";
 import { useState } from "react";
 import { TUser } from "../../types/TUser";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { changePassword, logout } from "../../store/slices/auth/authSlice";
-import MyButton from "../Buttons/MyButton";
-import MiniModal from "../Modal/MiniModal";
-import ChangePasswordForm from "../Forms/ChangePasswordForm";
+import { useRouter } from "next/router";
 
 interface ProfileProps {
     user: TUser | null;
@@ -14,9 +15,15 @@ interface ProfileProps {
 const Profile = ({ user }: ProfileProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const dispatch = useAppDispatch();
+    const router = useRouter();
 
     const handleChangePassword = (newPassword: string) => {
-        dispatch(changePassword({ newPassword, userId: user!.id }))
+        dispatch(changePassword({ newPassword }))
+    }
+
+    const handleLogout = () => {
+        dispatch(logout());
+        router.push("/signin");
     }
 
     return (
@@ -26,11 +33,11 @@ const Profile = ({ user }: ProfileProps) => {
                 <span className="arrow" />
             </MyButton>
 
-            <MiniModal isVisible={isOpen} style={{ maxWidth: "40rem", right: "0", top: "120%" }}>
+            <MiniModal isVisible={isOpen} style={{ minWidth: "28rem", maxWidth: "40rem", right: "0", top: "120%" }}>
                 <ChangePasswordForm onSubmit={handleChangePassword} />
 
                 <div className={styles.profile__logout}>
-                    <MyButton className={`--nofill --font-small`} onClick={() => dispatch(logout())}>
+                    <MyButton className={`--nofill --font-small`} onClick={handleLogout}>
                         Logout
                     </MyButton>
                 </div>
