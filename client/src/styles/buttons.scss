@@ -12,6 +12,10 @@
 }
 
 /* Btn Extra's */
+.btn.--font-small {
+    font-size: 1.2rem;
+}
+
 .btn.--diagonal {
     flex-direction: column;
 }
@@ -19,6 +23,15 @@
 .btn.--filled {
     color: #fff;
     background-color: $bg-primary;
+
+    &:hover,
+    &.active {
+        background-color: darken($bg-primary, 5%);
+    }
+
+    &:disabled {
+        background: grey;
+    }
 }
 
 .btn.--nofill {
@@ -44,9 +57,21 @@
     }
 }
 
+.btn.--darken {
+    background: darken($bg-primary, 5%);
+
+    &:hover {
+        background: darken($bg-primary, 7%);
+    }
+}
+
+.btn.--justify-center {
+    justify-content: center;
+}
+
 /* Standart Button */
 .btn {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 1rem;
 
@@ -59,13 +84,14 @@
     color: $secondary;
     font-family: $ff-primary;
     font-size: 1.6rem;
+    text-decoration: none;
 
     transition: all 0.2s linear;
 
     &:hover,
     &.active {
         color: #fff;
-        background: #444c63;
+        background: $bg-primary;
 
         svg {
             fill: #fff;
