@@ -1,37 +1,33 @@
 import styles from "../styles/pages/Auth.module.scss";
 import MainLayout from "../layouts/MainLayout";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { AuthFormWithNameFields, Notifier } from "../components";
+import { AuthFormWithNameFields } from "../components";
 import { useAppDispatch } from "../hooks/useAppDispatch";
-import { useTypedSelector } from "../hooks/useTypedSelector";
-import { selectAuthError, selectAuthIsLoading, selectIsLoggedIn, signup } from "../store/slices/auth/authSlice";
+import { GetServerSideProps } from "next";
+import { wrapper } from "../store/store";
+import { useRouter } from "next/router";
+import { signup } from "../store/slices/auth/actions";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { selectIsLoggedIn } from "../store/slices/auth/authSlice";
 
 const Signup = () => {
-    const router = useRouter();
-    const authError = useTypedSelector(selectAuthError);
-    const authIsLoading = useTypedSelector(selectAuthIsLoading);
-    const isLoggedIn = useTypedSelector(selectIsLoggedIn);
     const dispatch = useAppDispatch();
+    const router = useRouter();
+    const isLoggedIn = useSelector(selectIsLoggedIn);
 
     const handleSignUp = async (firstname: string, lastname: string, email: string, password: string) => {
         dispatch(signup({ firstname, lastname, email, password }));
     }
 
     useEffect(() => {
-        if (isLoggedIn && !authIsLoading) {
+        if (isLoggedIn) {
             router.push("/");
         }
     }, [isLoggedIn]);
 
     return (
         <>
-            <Notifier
-                text={authError?.message}
-                color="red"
-            />
-
             <MainLayout title="Sign Up | CloudBox" small withPadding>
                 <AuthFormWithNameFields
                     onSubmit={handleSignUp}
@@ -51,5 +47,22 @@ const Signup = () => {
         </>
     )
 }
+
+export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(store => async () => {
+    /* Redirect to login page if not logged in */
+    const isLoggedIn = store.getState().auth.isLoggedIn;
+    if (isLoggedIn) {
+        return {
+            redirect: {
+                destination: "/",
+                permanent: true
+            }
+        }
+    }
+
+    return {
+        props: {}
+    }
+})
 
 export default Signup;
