@@ -1,3 +1,4 @@
+import MyUpload from "./Inputs/MyUpload"
 import MyInput from "./Inputs/MyInput"
 import MyLabel from "./Inputs/MyLabel"
 import MyInputWithLabel from "./Inputs/MyInputWithLabel"
@@ -7,6 +8,7 @@ import ActionButtons from "./Buttons/ActionButtons"
 import SortButtons from "./Buttons/SortButtons"
 
 import File from "./File/File"
+import FileDrag from "./File/FileDrag"
 import FileGrid from "./File/FileGrid"
 
 import AuthForm from "./Forms/AuthForm"
@@ -20,6 +22,7 @@ import LeftBarLink from "./Leftbar/LeftBarLink"
 import Modal from "./Modal/Modal"
 import MiniModal from "./Modal/MiniModal"
 import Notifier from "./Modal/Notifier/Notifier"
+import ContextMenu from "./Modal/ContextMenu/ContextMenu"
 
 import Profile from "./Profile/Profile"
 
@@ -47,4 +50,7 @@ export {
     Spinner,
     SpinnerWithBG,
     NameForm,
+    ContextMenu,
+    FileDrag,
+    MyUpload
 }

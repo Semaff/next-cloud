@@ -5,8 +5,8 @@ import ChangePasswordForm from "../Forms/ChangePasswordForm";
 import { useState } from "react";
 import { TUser } from "../../types/TUser";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { changePassword, logout } from "../../store/slices/auth/authSlice";
 import { useRouter } from "next/router";
+import { changePassword, logout } from "../../store/slices/auth/actions";
 
 interface ProfileProps {
     user: TUser | null;

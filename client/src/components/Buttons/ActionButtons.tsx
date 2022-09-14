@@ -2,10 +2,10 @@ import MyButton from "./MyButton";
 import { memo } from "react";
 import { TFile } from "../../types/TFile";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { deleteFile } from "../../store/slices/files/filesSlice";
 import { useRouter } from "next/router";
 import { ArrowLeft, DeleteSVG, DownloadSVG, FolderSVG } from "../_SVG";
 import { request } from "../../api/requests";
+import { deleteFile } from "../../store/slices/files/actions";
 
 interface ActionButtonsProps {
     setSelectedFiles: (files: TFile[]) => void;

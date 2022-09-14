@@ -1,6 +1,6 @@
 import { MouseEvent, useState } from "react";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
-import { deleteFile, removeShareFile, renameFile, shareFile } from "../../../store/slices/files/filesSlice";
+import { deleteFile, removeShareFile, renameFile, shareFile } from "../../../store/slices/files/actions";
 import { TFile } from "../../../types/TFile";
 import MyButton from "../../Buttons/MyButton";
 import NameForm from "../../Forms/NameForm";

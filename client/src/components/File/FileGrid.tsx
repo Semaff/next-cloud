@@ -5,8 +5,8 @@ import { ESorts } from "../../types/ESorts";
 import { DragEvent, MouseEvent, useState } from "react";
 import { useRouter } from "next/router";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { uploadFile } from "../../store/slices/files/filesSlice";
 import { sortByCurrentSortName } from "../../utils/sortByCurrentSortName";
+import { uploadFile } from "../../store/slices/files/actions";
 
 interface FileGridProps {
     files: TFile[] | null;
