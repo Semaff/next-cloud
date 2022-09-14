@@ -1,31 +1,50 @@
-/*
-  UI
-*/
-import LeftBar from "./UI/LeftBar"
-import Logo from "./UI/Logo"
-import Spinner from "./UI/Spinner"
-import Notifier from "./UI/Notifier"
+import MyInput from "./Inputs/MyInput"
+import MyLabel from "./Inputs/MyLabel"
+import MyInputWithLabel from "./Inputs/MyInputWithLabel"
 
-/*
-  Other
-*/
-import ActionButtons from "./ActionButtons"
-import AuthForm from "./AuthForm"
-import ControlButtons from "./ControlButtons"
-import File from "./File"
-import FileGrid from "./FileGrid"
-import Profile from "./Profile"
+import MyButton from "./Buttons/MyButton"
+import ActionButtons from "./Buttons/ActionButtons"
+import SortButtons from "./Buttons/SortButtons"
+
+import File from "./File/File"
+import FileGrid from "./File/FileGrid"
+
+import AuthForm from "./Forms/AuthForm"
+import AuthFormWithNameFields from "./Forms/AuthFormWithNameFields"
+import ChangePasswordForm from "./Forms/ChangePasswordForm"
+import NameForm from "./Forms/NameForm"
+
+import LeftBar from "./Leftbar/LeftBar"
+import LeftBarLink from "./Leftbar/LeftBarLink"
+
+import Modal from "./Modal/Modal"
+import MiniModal from "./Modal/MiniModal"
+import Notifier from "./Modal/Notifier/Notifier"
+
+import Profile from "./Profile/Profile"
+
+import Spinner from "./Spinner/Spinner"
+import SpinnerWithBG from "./Spinner/SpinnerWithBG"
 
 export {
-    LeftBar,
-    Logo,
-    Spinner,
-    Notifier,
-
     ActionButtons,
     AuthForm,
-    ControlButtons,
+    AuthFormWithNameFields,
+    ChangePasswordForm,
+    SortButtons,
     File,
     FileGrid,
-    Profile
+    LeftBar,
+    LeftBarLink,
+    MyButton,
+    MyInput,
+    MyInputWithLabel,
+    MyLabel,
+    MiniModal,
+    Notifier,
+    Modal,
+    Profile,
+    Spinner,
+    SpinnerWithBG,
+    NameForm,
 }
