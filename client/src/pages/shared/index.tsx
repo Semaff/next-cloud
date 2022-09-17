@@ -1,26 +1,27 @@
 import styles from "../../styles/pages/Home.module.scss";
 import MainLayoutWithLeftBar from "../../layouts/MainLayoutWithLeftBar";
-import { ContextMenu, FileGrid, MyInputWithLabel, Profile, SortButtons } from "../../components";
+import { FileGrid, Modal, MyInputWithLabel, NameForm, Profile, SortButtons } from "../../components";
 import { useSelector } from "react-redux";
 import { selectIsLoggedIn, selectUser } from "../../store/slices/auth/authSlice";
-import { MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ESorts } from "../../types/ESorts";
 import { selectFiles } from "../../store/slices/files/filesSlice";
 import { TFile } from "../../types/TFile";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
 import { wrapper } from "../../store/store";
-import { fetchSharedFiles } from "../../store/slices/files/actions";
+import { fetchSharedFiles, renameFile } from "../../store/slices/files/actions";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
 
 const SharedPage: NextPage = () => {
-    const [anchor, setAnchor] = useState({ x: 0, y: 0 });
     const [selectedFiles, setSelectedFiles] = useState<TFile[]>([]);
-    const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
-    const [curSort, setCurSort] = useState<ESorts>(ESorts.NAME);
+    const [currentSort, setCurrentSort] = useState(ESorts.NAME);
+    const [isRenameModalVisible, setIsRenameModalVisible] = useState(false);
     const user = useSelector(selectUser);
     const files = useSelector(selectFiles);
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const router = useRouter();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (!isLoggedIn) {
@@ -28,65 +29,65 @@ const SharedPage: NextPage = () => {
         }
     }, []);
 
-    const handleShowContextMenu = (e: MouseEvent<HTMLDivElement>, file: TFile) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setSelectedFiles([file]);
-
-        setIsContextMenuOpen(false);
-        const newPosition = {
-            x: e.pageX,
-            y: e.pageY,
-        };
-
-        setAnchor(newPosition);
-        setIsContextMenuOpen(true);
+    const handleRenameFile = (name: string) => {
+        const file = selectedFiles[0];
+        dispatch(renameFile({ name, file }));
+        setIsRenameModalVisible(false);
     }
 
     return (
-        <div onClick={() => setIsContextMenuOpen(false)}>
-            <ContextMenu
-                selectedFiles={selectedFiles}
-                setIsContextMenuOpen={setIsContextMenuOpen}
-                isVisible={isContextMenuOpen}
-                coords={anchor}
-            />
+        <>
+            <Modal isVisible={isRenameModalVisible} setIsVisible={setIsRenameModalVisible}
+                style={{
+                    width: "30rem",
+                    borderRadius: "3px"
+                }}>
+                <NameForm
+                    onSubmit={handleRenameFile}
+                    btnText="Rename file"
+                    labelText="Enter new file's name"
+                />
+            </Modal>
 
             <MainLayoutWithLeftBar title="Shared Files | CloudBox">
                 <div className={styles.home}>
-                    <div className={styles.home__block}>
-                        <MyInputWithLabel view="horizontal" styles={{ maxWidth: "40rem" }}>
-                            Search
-                        </MyInputWithLabel>
+                    <div className={styles.home__head}>
+                        <div className={styles.home__block}>
+                            <MyInputWithLabel view="horizontal" styles={{ maxWidth: "40rem" }}>
+                                Search
+                            </MyInputWithLabel>
 
-                        <Profile user={user} />
+                            <Profile user={user} />
+                        </div>
+
+                        <h1 className={styles.home__title}>Shared Files</h1>
+
+                        <div className={styles.home__block}>
+                            <SortButtons
+                                currentSort={currentSort}
+                                setCurrentSort={setCurrentSort}
+                            />
+                        </div>
                     </div>
 
-                    <h1 className={styles.home__title}>Shared Files</h1>
-
-                    <div className={styles.home__block}>
-                        <SortButtons
-                            curSort={curSort}
-                            setCurSort={setCurSort}
+                    <div className={styles.home__body}>
+                        <FileGrid
+                            files={files}
+                            currentSort={currentSort}
+                            selectedFiles={selectedFiles}
+                            setSelectedFiles={setSelectedFiles}
+                            setIsRenameModalVisible={setIsRenameModalVisible}
                         />
                     </div>
-
-                    <FileGrid
-                        curSort={curSort}
-                        files={files}
-                        selectedFiles={selectedFiles}
-                        setSelectedFiles={setSelectedFiles}
-                        handleShowContextMenu={handleShowContextMenu}
-                        setIsContextMenuOpen={setIsContextMenuOpen}
-                    />
                 </div>
             </MainLayoutWithLeftBar>
-        </div>
+        </>
     )
 }
 
 SharedPage.getInitialProps = wrapper.getInitialPageProps(store => async (ctx) => {
     await store.dispatch(fetchSharedFiles({ ctx }));
+    
     return {
         props: {}
     }
