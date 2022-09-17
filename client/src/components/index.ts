@@ -8,8 +8,9 @@ import ActionButtons from "./Buttons/ActionButtons"
 import SortButtons from "./Buttons/SortButtons"
 
 import File from "./File/File"
-import FileDrag from "./File/FileDrag"
+import FileMirage from "./File/FileMirage"
 import FileGrid from "./File/FileGrid"
+import FileGridWithDragNDrop from "./File/FileGridWithDragNDrop"
 
 import AuthForm from "./Forms/AuthForm"
 import AuthFormWithNameFields from "./Forms/AuthFormWithNameFields"
@@ -49,8 +50,9 @@ export {
     Profile,
     Spinner,
     SpinnerWithBG,
+    FileGridWithDragNDrop,
     NameForm,
     ContextMenu,
-    FileDrag,
+    FileMirage,
     MyUpload
 }
