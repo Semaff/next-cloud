@@ -5,7 +5,7 @@ import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { selectUser } from "../../store/slices/auth/authSlice";
 import { uploadFile } from "../../store/slices/files/actions";
-import styles from "../../styles/blocks/LeftBar.module.scss";
+import styles from "./LeftBar.module.scss";
 import formatSize from "../../utils/formatSize";
 import MyUpload from "../Inputs/MyUpload";
 import ProgressBar from "../ProgressBar/ProgressBar";
