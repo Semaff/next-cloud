@@ -1,4 +1,4 @@
-import styles from "../../styles/blocks/Modal.module.scss";
+import styles from "./Modal.module.scss";
 import { CSSProperties, MouseEvent, ReactNode } from "react";
 
 export interface MiniModalProps {

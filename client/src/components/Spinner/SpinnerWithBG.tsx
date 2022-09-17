@@ -1,4 +1,4 @@
-import styles from "../../styles/blocks/Spinner.module.scss";
+import styles from "./Spinner.module.scss";
 import Spinner from "./Spinner";
 
 const SpinnerWithBG = () => {

@@ -1,5 +1,5 @@
 import { CSSProperties, ReactNode } from "react";
-import styles from "../../styles/blocks/Modal.module.scss";
+import styles from "./Modal.module.scss";
 
 export interface ModalProps {
     isVisible: boolean;

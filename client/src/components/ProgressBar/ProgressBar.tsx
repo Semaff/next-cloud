@@ -1,4 +1,4 @@
-import styles from "../../styles/blocks/ProgressBar.module.scss";
+import styles from "./ProgressBar.module.scss";
 
 interface ProgressBarProps {
     progress: number;

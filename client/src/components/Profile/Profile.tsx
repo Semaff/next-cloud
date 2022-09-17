@@ -1,4 +1,4 @@
-import styles from "../../styles/blocks/Profile.module.scss"
+import styles from "./Profile.module.scss"
 import MyButton from "../Buttons/MyButton";
 import MiniModal from "../Modal/MiniModal";
 import ChangePasswordForm from "../Forms/ChangePasswordForm";
