@@ -3,14 +3,14 @@ import { ESorts } from "../../types/ESorts";
 import MyButton from "./MyButton";
 
 interface SortButtonsProps {
-    curSort: ESorts,
-    setCurSort: (curSort: ESorts) => void;
+    currentSort: ESorts,
+    setCurrentSort: (curSort: ESorts) => void;
 }
 
-const SortButtons = ({ curSort, setCurSort }: SortButtonsProps) => {
+const SortButtons = ({ currentSort, setCurrentSort }: SortButtonsProps) => {
     const changeSort = (e: MouseEvent<HTMLButtonElement>) => {
         const newSort = e.currentTarget.name as ESorts;
-        setCurSort(newSort);
+        setCurrentSort(newSort);
     }
 
     return (
@@ -18,21 +18,21 @@ const SortButtons = ({ curSort, setCurSort }: SortButtonsProps) => {
             <MyButton
                 name={ESorts.NAME}
                 onClick={e => changeSort(e)}
-                className={curSort === ESorts.NAME ? "active" : ""}
+                className={currentSort === ESorts.NAME ? "active" : ""}
             >
                 Name
             </MyButton>
             <MyButton
                 name={ESorts.SIZE}
                 onClick={e => changeSort(e)}
-                className={curSort === ESorts.SIZE ? "active" : ""}
+                className={currentSort === ESorts.SIZE ? "active" : ""}
             >
                 Size
             </MyButton>
             <MyButton
                 name={ESorts.MODIFIED}
                 onClick={e => changeSort(e)}
-                className={curSort === ESorts.MODIFIED ? "active" : ""}
+                className={currentSort === ESorts.MODIFIED ? "active" : ""}
             >
                 Modified
             </MyButton>
