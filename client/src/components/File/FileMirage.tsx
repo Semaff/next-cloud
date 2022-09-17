@@ -1,25 +1,16 @@
-import styles from "../../styles/blocks/File.module.scss";
+import styles from "./File.module.scss";
 import Image from "next/image";
-import MiniModal from "../Modal/MiniModal";
-import { MouseEvent, useMemo } from "react";
+import { MiniModal } from "..";
+import { MouseEvent } from "react";
 
-interface FileDragProps {
+interface FileMirageProps {
     isVisible: boolean;
     coords: { x: number, y: number }
     onMouseUp: (e: MouseEvent<HTMLDivElement>) => void;
     onMouseMove: (e: MouseEvent<HTMLDivElement>) => void;
 }
 
-const FileDrag = (props: FileDragProps) => {
-    const {
-        isVisible,
-        coords,
-        onMouseUp,
-        onMouseMove
-    } = props;
-
-    const imageSize = useMemo(() => 40, []);
-
+const FileMirage = ({ isVisible, coords, onMouseUp, onMouseMove }: FileMirageProps) => {
     return (
         <MiniModal
             isVisible={isVisible}
@@ -30,18 +21,17 @@ const FileDrag = (props: FileDragProps) => {
                 width: "unset",
                 top: coords.y,
                 left: coords.x
-            }}
-        >
-            <div className={styles.mirage}>
+            }}>
+            <div className={styles.file__mirage}>
                 <Image
-                    width={imageSize}
-                    height={imageSize}
+                    width={40}
+                    height={40}
                     src={"/file.png"}
-                    alt={"Move"}
+                    alt={"Move Files"}
                 />
             </div>
         </MiniModal>
     )
 }
 
-export default FileDrag;
+export default FileMirage;
