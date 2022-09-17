@@ -1,134 +1,161 @@
-import styles from "../../styles/blocks/File.module.scss";
+import styles from "./File.module.scss";
 import File from "./File";
+import { DragEvent, MouseEvent, useRef, useState } from "react";
 import { TFile } from "../../types/TFile";
-import { ESorts } from "../../types/ESorts";
-import { DragEvent, MouseEvent, useState } from "react";
-import { useRouter } from "next/router";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { sortByCurrentSortName } from "../../utils/sortByCurrentSortName";
-import { uploadFile } from "../../store/slices/files/actions";
+import FileMirage from "./FileMirage";
+import { ESorts } from "../../types/ESorts";
+import ContextMenu from "../Modal/ContextMenu/ContextMenu";
+import { moveFile } from "../../store/slices/files/actions";
+import { getElementOffset } from "../../utils/getElementProperties";
 
-interface FileGridProps {
-    files: TFile[] | null;
-    curSort: ESorts;
-    selectedFiles: TFile[];
-    setSelectedFiles: (files: TFile[]) => void;
-    handleShowContextMenu: (e: MouseEvent<HTMLDivElement>, file: TFile) => void;
-    setIsContextMenuOpen: (isOpen: boolean) => void;
-    onMouseDown?: (e: MouseEvent<HTMLElement>, file: TFile) => void;
-    onMouseUp?: (e: MouseEvent<HTMLElement>, file?: TFile) => void;
-    onMouseMove?: (e: MouseEvent<HTMLElement>) => void;
+/*
+  Helper Functions
+  =================
+*/
+function sortFiles(files: TFile[], sort: ESorts) {
+    const orderedFiles: TFile[] = [...files].sort((a, b) => sortBySortName(a, b, sort));
+    return orderedFiles.sort((a, b) => a.type === "dir" ? b.type === "dir" ? 0 : -1 : 1);
 }
 
-const FileGrid = (props: FileGridProps) => {
-    const {
-        curSort,
-        files,
-        handleShowContextMenu,
-        onMouseDown,
-        onMouseMove,
-        onMouseUp,
-        selectedFiles,
-        setIsContextMenuOpen,
-        setSelectedFiles
-    } = props
+function sortBySortName(a: TFile, b: TFile, sort: ESorts) {
+    if (sort === ESorts.NAME) {
+        return a.name.localeCompare(b.name)
+    } else if (sort === ESorts.SIZE) {
+        return a.size > b.size ? -1 : 1;
+    } else {
+        return new Date(a.updatedAt) > new Date(b.updatedAt) ? -1 : 1
+    }
+}
 
-    const [dragEnter, setDragEnter] = useState(false);
-    const router = useRouter();
+/*
+  File Grid component
+  ======================
+*/
+interface FileGridProps {
+    files: TFile[],
+    currentSort: ESorts,
+    selectedFiles: TFile[],
+    setSelectedFiles: (files: TFile[] | ((prev: TFile[]) => TFile[])) => void;
+    setIsRenameModalVisible: (isVisible: boolean) => void;
+    onDragEnter?: (e: DragEvent<HTMLElement>) => void;
+}
+
+const FileGrid = ({ files, currentSort, selectedFiles, setSelectedFiles, setIsRenameModalVisible, onDragEnter }: FileGridProps) => {
+    const orderedFiles = sortFiles(files, currentSort);
+    const fileGridRef = useRef(null);
     const dispatch = useAppDispatch();
 
-    let orderedFiles: TFile[] | undefined;
-    if (files) {
-        orderedFiles = [...files]
-            .sort((a, b) => sortByCurrentSortName(a, b, curSort))
-            .sort((a, b) => a.type === "dir" ? b.type === "dir" ? 0 : -1 : 1);
-    }
+    /* Mirage File state */
+    const [isMouseDown, setIsMouseDown] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
+    const [mirageAnchor, setMirageAnchor] = useState({ x: 0, y: 0 });
 
-    const handleFileClick = (e: MouseEvent<HTMLDivElement>, file: TFile) => {
-        const isSelected = selectedFiles.find(fileEl => fileEl.id === file.id);
+    /* Context Menu state */
+    const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
+    const [anchor, setAnchor] = useState({ x: 0, y: 0 });
+
+    const handleClick = () => {
+        setSelectedFiles([]);
         setIsContextMenuOpen(false);
-        if (!e.ctrlKey && !e.shiftKey) {
-            return setSelectedFiles([file]);
+    }
+
+    const handleMouseDown = (e: MouseEvent<HTMLElement>, file: TFile) => {
+        if (selectedFiles.length <= 1 && !e.ctrlKey && !e.shiftKey) {
+            setSelectedFiles([file]);
         }
 
-        if (e.shiftKey) {
-            const startPoint = orderedFiles?.indexOf(selectedFiles[0]) || 0;
-            const endPoint = orderedFiles?.indexOf(file) || 0;
-            const newStartPoint = startPoint < endPoint ? startPoint : endPoint;
-            const newEndPoint = startPoint < endPoint ? endPoint : startPoint;
-            const newSelectedFiles: TFile[] = [];
-            for (let i = newStartPoint; i <= newEndPoint; i++) {
-                if (orderedFiles?.[i]) {
-                    newSelectedFiles.push(orderedFiles[i]);
-                }
+        if (!fileGridRef.current) {
+            return;
+        }
+
+        const { offsetX, offsetY } = getElementOffset(fileGridRef.current);
+        setIsMouseDown(true);
+        const newPosition = {
+            x: e.pageX - offsetX,
+            y: e.pageY - offsetY,
+        };
+
+        setMirageAnchor(newPosition);
+    }
+
+    const handleMouseUp = (e: MouseEvent<HTMLElement>, file?: TFile) => {
+        setIsMouseDown(false);
+        setIsDragging(false);
+
+        if (!file || file.type !== "dir" || selectedFiles.find(fileEl => fileEl.id === file.id)) {
+            return;
+        }
+
+        if (isDragging) {
+            const parentId = file.id;
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const file = selectedFiles[i];
+                dispatch(moveFile({ fileId: file.id, parentId }))
             }
-            return setSelectedFiles(newSelectedFiles);
-        }
-
-        if (isSelected) {
-            setSelectedFiles([...selectedFiles.filter(fileEl => fileEl.id !== file.id)]);
-        } else {
-            setSelectedFiles([...selectedFiles, file]);
         }
     }
 
-    function dragEnterHandler(e: DragEvent<HTMLElement>) {
-        e.preventDefault();
-        e.stopPropagation();
-        setDragEnter(true);
-    }
+    const handleMouseMove = (e: MouseEvent<HTMLElement>) => {
+        if (!fileGridRef.current) {
+            return;
+        }
 
-    function dragLeaveHandler(e: DragEvent<HTMLElement>) {
-        e.preventDefault();
-        e.stopPropagation();
-        setDragEnter(false);
-    }
+        const { offsetX, offsetY } = getElementOffset(fileGridRef.current);
+        const dx = Math.abs(e.pageX - offsetX - mirageAnchor.x) >= 20;
+        const dy = Math.abs(e.pageY - offsetY - mirageAnchor.y) >= 20;
 
-    function dropHandler(e: DragEvent<HTMLElement>) {
-        e.preventDefault();
-        e.stopPropagation();
-        const files = [...Array.from(e.dataTransfer.files)];
-        files.forEach(file => dispatch(uploadFile({ file, path: router.asPath })));
-        setDragEnter(false);
+        if ((isMouseDown && (dx || dy)) || isDragging) {
+            setIsDragging(true);
+            const newPosition = {
+                x: e.pageX - offsetX + 30,
+                y: e.pageY - offsetY + 45,
+            };
+
+            setMirageAnchor(newPosition);
+        }
     }
 
     return (
-        <section className={styles.file__drag} onMouseMove={onMouseMove} onMouseUp={onMouseUp}>
-            {!dragEnter
-                ?
-                <section
-                    className={styles.file__grid}
-                    onClick={() => setSelectedFiles([])}
-                    onDragEnter={dragEnterHandler}
-                    onDragLeave={dragLeaveHandler}
-                    onDragOver={dragEnterHandler}
-                >
-                    {orderedFiles?.map((file) => (
-                        <File
-                            key={file.id}
-                            file={file}
-                            selectedFiles={selectedFiles}
-                            setSelectedFiles={setSelectedFiles}
-                            handleShowContextMenu={handleShowContextMenu}
-                            handleFileClick={handleFileClick}
-                            onMouseDown={onMouseDown}
-                            onMouseUp={onMouseUp}
-                        />
-                    ))}
-                </section>
-                :
-                <div
-                    onDragEnter={dragEnterHandler}
-                    onDragLeave={dragLeaveHandler}
-                    onDragOver={dragEnterHandler}
-                    onDrop={dropHandler}
-                    className={styles["file__drop"]}
-                    style={{ display: dragEnter ? "flex" : "none" }}
-                >
-                    Drop your files there
-                </div>
-            }
-        </section>
+        <div
+            ref={fileGridRef}
+            className={styles["file__grid-inner"]}
+            onClick={handleClick}
+            onDragEnter={onDragEnter}
+            onDragOver={onDragEnter}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+        >
+            <FileMirage
+                coords={mirageAnchor}
+                isVisible={isMouseDown && isDragging}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+            />
+
+            <ContextMenu
+                coords={anchor}
+                isVisible={isContextMenuOpen}
+                selectedFiles={selectedFiles}
+                setIsContextMenuOpen={setIsContextMenuOpen}
+                setIsRenameModalVisible={setIsRenameModalVisible}
+            />
+
+            {orderedFiles.map((file) => (
+                <File
+                    key={file.id}
+                    file={file}
+                    fileGridRef={fileGridRef}
+                    files={orderedFiles}
+                    selectedFiles={selectedFiles}
+                    setSelectedFiles={setSelectedFiles}
+                    setAnchor={setAnchor}
+                    setIsContextMenuOpen={setIsContextMenuOpen}
+                    onMouseDown={handleMouseDown}
+                    onMouseUp={handleMouseUp}
+                />
+            ))}
+        </div>
     )
 }
 
