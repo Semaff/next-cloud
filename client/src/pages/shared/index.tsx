@@ -1,6 +1,6 @@
 import styles from "../../styles/pages/Home.module.scss";
 import MainLayoutWithLeftBar from "../../layouts/MainLayoutWithLeftBar";
-import { FileGrid, Modal, MyInputWithLabel, NameForm, Profile, SortButtons } from "../../components";
+import { FileGrid, Modal, MyInputWithLabel, NameFormWithButton, Profile, SortButtons } from "../../components";
 import { useSelector } from "react-redux";
 import { selectIsLoggedIn, selectUser } from "../../store/slices/auth/authSlice";
 import { useEffect, useState } from "react";
@@ -42,7 +42,7 @@ const SharedPage: NextPage = () => {
                     width: "30rem",
                     borderRadius: "3px"
                 }}>
-                <NameForm
+                <NameFormWithButton
                     onSubmit={handleRenameFile}
                     btnText="Rename file"
                     labelText="Enter new file's name"
