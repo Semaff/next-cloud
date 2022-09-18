@@ -2,7 +2,7 @@ import styles from "../styles/pages/Home.module.scss";
 import MainLayoutWithLeftBar from "../layouts/MainLayoutWithLeftBar";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { ActionButtons, NameForm, Modal, MyInputWithLabel, Profile, SortButtons, FileMirage, ContextMenu, FileGridWithDragNDrop } from "../components";
+import { ActionButtons, NameForm, Modal, Profile, SortButtons, FileGridWithDragNDrop, NameFormWithButton } from "../components";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { useTypedSelector } from "../hooks/useTypedSelector";
 import { selectIsLoggedIn, selectUser } from "../store/slices/auth/authSlice";
@@ -12,8 +12,15 @@ import { NextPage } from "next";
 import { wrapper } from "../store/store";
 import { selectFiles } from "../store/slices/files/filesSlice";
 import { createFolder, fetchFiles, renameFile } from "../store/slices/files/actions";
+import Uploader from "../components/Modal/Uploader/Uploader";
 
-const reservedNames = ["signin", "signup", "profile", "shared"]
+const reservedNames = [
+    "signin",
+    "signup",
+    "profile",
+    "shared",
+    "search"
+];
 
 const Home: NextPage = () => {
     const [isFolderModalVisible, setIsFolderModalVisible] = useState(false);
@@ -47,10 +54,14 @@ const Home: NextPage = () => {
         return dispatch(createFolder({ path: router.asPath, name }));
     }
 
+    const handleSearch = (query: string) => {
+        router.push(`/search?query=${query}`);
+    }
+
     return (
         <>
             <Modal isVisible={isFolderModalVisible} setIsVisible={setIsFolderModalVisible}>
-                <NameForm
+                <NameFormWithButton
                     onSubmit={handleCreateFolder}
                     btnText="Create folder"
                     labelText="Enter folder's name"
@@ -62,20 +73,27 @@ const Home: NextPage = () => {
                     width: "30rem",
                     borderRadius: "3px"
                 }}>
-                <NameForm
+                <NameFormWithButton
                     onSubmit={handleRenameFile}
                     btnText="Rename file"
                     labelText="Enter new file's name"
                 />
             </Modal>
 
+            <Uploader
+                isVisible={true}
+            />
+
             <MainLayoutWithLeftBar>
                 <div className={styles.home}>
                     <div className={styles.home__head}>
                         <div className={styles.home__block}>
-                            <MyInputWithLabel view="horizontal" styles={{ maxWidth: "40rem" }}>
-                                Search
-                            </MyInputWithLabel>
+                            <NameForm
+                                view="horizontal"
+                                labelText="Search"
+                                onSubmit={handleSearch}
+                                style={{ maxWidth: "50rem" }}
+                            />
 
                             <Profile user={user} />
                         </div>
