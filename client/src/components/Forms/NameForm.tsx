@@ -1,14 +1,15 @@
-import { ChangeEvent, FormEvent, useState } from "react";
-import MyButton from "../Buttons/MyButton";
+import { ChangeEvent, CSSProperties, FormEvent, ReactNode, useState } from "react";
 import MyInputWithLabel from "../Inputs/MyInputWithLabel";
 
-interface CreateFolderFormProps {
-    btnText: string;
+export interface NameFormProps {
+    view?: "vertical" | "horizontal";
+    children?: ReactNode | string;
+    style?: CSSProperties;
     labelText: string;
     onSubmit: (...args: any[]) => void;
 }
 
-const NameForm = ({ btnText, labelText, onSubmit }: CreateFolderFormProps) => {
+const NameForm = ({ view, children, labelText, style, onSubmit }: NameFormProps) => {
     const [name, setName] = useState("");
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -18,10 +19,10 @@ const NameForm = ({ btnText, labelText, onSubmit }: CreateFolderFormProps) => {
     }
 
     return (
-        <form className="form" onSubmit={handleSubmit}>
+        <form className="form" onSubmit={handleSubmit} style={style}>
             <div className="form__body">
                 <MyInputWithLabel
-                    view="vertical"
+                    view={view || "vertical"}
                     name={labelText}
                     value={name}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
@@ -30,11 +31,7 @@ const NameForm = ({ btnText, labelText, onSubmit }: CreateFolderFormProps) => {
                 </MyInputWithLabel>
             </div>
 
-            <div className="form__footer">
-                <MyButton className="--filled" type="submit">
-                    {btnText}
-                </MyButton>
-            </div>
+            {children}
         </form>
     )
 }
