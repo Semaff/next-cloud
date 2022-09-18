@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
-import { createFolder, deleteFile, fetchFile, fetchFiles, fetchSharedFiles, moveFile, removeShareFile, renameFile, shareFile, uploadFile } from "./actions";
+import { createFolder, deleteFile, fetchFile, fetchFiles, fetchSharedFiles, moveFile, removeShareFile, renameFile, searchFiles, shareFile, uploadFile } from "./actions";
 import { FilesState, SetErrorAction, SetFileAction, SetFilesAction, SetIsLoadingAction } from "./types";
 
 /* InitialState + Reducer */
@@ -59,6 +59,16 @@ const filesSlice = createSlice({
                 state.files = action.payload;
             })
             .addCase(fetchSharedFiles.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error.message || "Unexpected error!";
+            })
+
+            /* Search Files */
+            .addCase(searchFiles.fulfilled, (state, action) => {
+                state.files = action.payload;
+            })
+            .addCase(searchFiles.pending, (state, action) => { state.isLoading = true })
+            .addCase(searchFiles.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.error.message || "Unexpected error!";
             })

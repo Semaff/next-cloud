@@ -68,3 +68,7 @@ export interface FetchAllActionFields {
 export interface FetchOneActionFields {
     ctx: NextPageContext | GetServerSidePropsContext
 }
+
+export interface SearchActionFields {
+    ctx: NextPageContext | GetServerSidePropsContext
+}

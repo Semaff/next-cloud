@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { request } from "../../../api/requests";
 import { TFile } from "../../../types/TFile";
-import { CreateFolderActionFields, DeleteFileActionFields, FetchAllActionFields, MoveFileActionFields, RemoveShareFileActionFields, RenameFileActionFields, ShareFileActionFields, UploadFileActionFields } from "./types";
+import { CreateFolderActionFields, DeleteFileActionFields, FetchAllActionFields, MoveFileActionFields, RemoveShareFileActionFields, RenameFileActionFields, SearchActionFields, ShareFileActionFields, UploadFileActionFields } from "./types";
 import decodePath from "../../../utils/decodePath";
 
 /*
@@ -153,6 +153,24 @@ export const fetchFile = createAsyncThunk<TFile, FetchAllActionFields>("files/ge
                 Cookie: ctx.req?.headers.cookie || ""
             }
         });
+        return response.data;
+    } catch (err) {
+        if (err instanceof AxiosError) {
+            return Promise.reject(`Error: ${err.response?.data.message}`);
+        }
+
+        return Promise.reject(`Error: ${(err as Error)?.message}`);
+    }
+});
+
+export const searchFiles = createAsyncThunk<TFile[], SearchActionFields>("files/search", async ({ ctx }) => {
+    try {
+        const response = await request.get<TFile[]>("api/files/search?query=" + ctx.query.query, {
+            headers: {
+                Cookie: ctx.req?.headers.cookie || ""
+            }
+        });
+
         return response.data;
     } catch (err) {
         if (err instanceof AxiosError) {
