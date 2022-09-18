@@ -16,6 +16,7 @@ import AuthForm from "./Forms/AuthForm"
 import AuthFormWithNameFields from "./Forms/AuthFormWithNameFields"
 import ChangePasswordForm from "./Forms/ChangePasswordForm"
 import NameForm from "./Forms/NameForm"
+import NameFormWithButton from "./Forms/NameFormWithButton"
 
 import LeftBar from "./Leftbar/LeftBar"
 import LeftBarLink from "./Leftbar/LeftBarLink"
@@ -54,5 +55,6 @@ export {
     NameForm,
     ContextMenu,
     FileMirage,
-    MyUpload
+    MyUpload,
+    NameFormWithButton
 }
