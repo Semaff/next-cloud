@@ -129,8 +129,8 @@ class FileController {
             const { id: userId } = req.user;
             const { fileId, parentId } = req.body;
 
-            const file = await FileService.move(userId, fileId, parentId);
-            return res.json(file);
+            const files = await FileService.move(userId, fileId, parentId);
+            return res.json(files);
         } catch (err) {
             next(err);
         }

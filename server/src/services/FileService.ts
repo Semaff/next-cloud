@@ -185,7 +185,7 @@ class FileService {
         return file;
     }
 
-    static async move(userId: number | string, fileId: number | string, parentId: number | string): Promise<File> {
+    static async move(userId: number | string, fileId: number | string, parentId: number | string): Promise<File[]> {
         const file = await File.findOne({ where: { id: fileId, userId } });
         if (!file) {
             throw AppError.badRequest("This file doesn't exist!");
@@ -230,7 +230,9 @@ class FileService {
         /* Find every child in that file and change their path (recursive) */
         const children = await File.findAll({ where: { parent: file.id } });
         children.forEach(FileService.updatePathRelativeToParent);
-        return file;
+
+        const oldParentFolderChilds = await File.findAll({ where: { parent: oldParentFolder.id } });
+        return oldParentFolderChilds;
     }
 
     static async rename(userId: number | string, fileId: number | string, name: string): Promise<File> {

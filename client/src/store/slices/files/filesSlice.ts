@@ -116,9 +116,10 @@ const filesSlice = createSlice({
                 state.error = action.error.message || "Unexpected error!";
             })
 
-            /* Rename File */
+            /* Move File */
             .addCase(moveFile.fulfilled, (state, action) => {
-                state.files = state.files.filter(fileEl => fileEl.id !== action.payload.id);
+                state.files = action.payload;
+                // state.files = state.files.filter(fileEl => fileEl.id !== action.payload.id);
             })
             .addCase(moveFile.pending, (state, action) => { state.isLoading = true })
             .addCase(moveFile.rejected, (state, action) => {

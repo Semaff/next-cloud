@@ -63,9 +63,9 @@ export const removeShareFile = createAsyncThunk<TFile, RemoveShareFileActionFiel
     }
 });
 
-export const moveFile = createAsyncThunk<TFile, MoveFileActionFields>("files/moveFile", async ({ fileId, parentId }) => {
+export const moveFile = createAsyncThunk<TFile[], MoveFileActionFields>("files/moveFile", async ({ fileId, parentId }) => {
     try {
-        const response = await request.put<TFile>("api/files/move", { fileId, parentId });
+        const response = await request.put<TFile[]>("api/files/move", { fileId, parentId });
         return response.data;
     } catch (err) {
         if (err instanceof AxiosError) {
