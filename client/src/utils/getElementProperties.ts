@@ -5,10 +5,7 @@ export function getElementSize(element: HTMLElement) {
     return { width, height };
 }
 
-export function getElementOffset(element: HTMLElement) {
-    const { width: documentWidth, height: documentHeight } = getElementSize(document.documentElement);
-    const { width, height } = getElementSize(element);
-    const offsetX = documentWidth - width;
-    const offsetY = documentHeight - height;
-    return { offsetX, offsetY };
+export function getElementCoordinates(element: HTMLElement) {
+    const { left, top } = element.getBoundingClientRect();
+    return { offsetX: left, offsetY: top };
 }

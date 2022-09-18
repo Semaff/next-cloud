@@ -6,7 +6,7 @@ import { MouseEvent, MutableRefObject } from "react";
 import { cutLongWord } from "../../utils/cutLongWord";
 import { Share } from "../_SVG";
 import { Anchor } from "../../types/Anchor";
-import { getElementOffset } from "../../utils/getElementProperties";
+import { getElementCoordinates } from "../../utils/getElementProperties";
 
 export interface FileProps {
     file: TFile;
@@ -80,11 +80,11 @@ const File = ({ file, fileGridRef, files, selectedFiles, setSelectedFiles, setAn
             return;
         }
 
-        const { offsetX, offsetY } = getElementOffset(fileGridRef.current);
+        const { offsetX, offsetY } = getElementCoordinates(fileGridRef.current);
         setIsContextMenuOpen(false);
         const newPosition = {
-            x: e.pageX - offsetX + 30,
-            y: e.pageY - offsetY + 45,
+            x: e.pageX - offsetX,
+            y: e.pageY - offsetY,
         };
 
         setAnchor(newPosition);

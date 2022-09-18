@@ -7,7 +7,7 @@ import FileMirage from "./FileMirage";
 import { ESorts } from "../../types/ESorts";
 import ContextMenu from "../Modal/ContextMenu/ContextMenu";
 import { moveFile } from "../../store/slices/files/actions";
-import { getElementOffset } from "../../utils/getElementProperties";
+import { getElementCoordinates } from "../../utils/getElementProperties";
 
 /*
   Helper Functions
@@ -69,7 +69,7 @@ const FileGrid = ({ files, currentSort, selectedFiles, setSelectedFiles, setIsRe
             return;
         }
 
-        const { offsetX, offsetY } = getElementOffset(fileGridRef.current);
+        const { offsetX, offsetY } = getElementCoordinates(fileGridRef.current);
         setIsMouseDown(true);
         const newPosition = {
             x: e.pageX - offsetX,
@@ -101,15 +101,15 @@ const FileGrid = ({ files, currentSort, selectedFiles, setSelectedFiles, setIsRe
             return;
         }
 
-        const { offsetX, offsetY } = getElementOffset(fileGridRef.current);
+        const { offsetX, offsetY } = getElementCoordinates(fileGridRef.current);
         const dx = Math.abs(e.pageX - offsetX - mirageAnchor.x) >= 20;
         const dy = Math.abs(e.pageY - offsetY - mirageAnchor.y) >= 20;
 
         if ((isMouseDown && (dx || dy)) || isDragging) {
             setIsDragging(true);
             const newPosition = {
-                x: e.pageX - offsetX + 30,
-                y: e.pageY - offsetY + 45,
+                x: e.pageX - offsetX,
+                y: e.pageY - offsetY,
             };
 
             setMirageAnchor(newPosition);
