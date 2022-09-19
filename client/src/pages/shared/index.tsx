@@ -1,6 +1,6 @@
 import styles from "../../styles/pages/Home.module.scss";
 import MainLayoutWithLeftBar from "../../layouts/MainLayoutWithLeftBar";
-import { FileGrid, Modal, MyInputWithLabel, NameFormWithButton, Profile, SortButtons } from "../../components";
+import { FileGrid, Modal, MyInputWithLabel, NameForm, NameFormWithButton, Profile, SortButtons } from "../../components";
 import { useSelector } from "react-redux";
 import { selectIsLoggedIn, selectUser } from "../../store/slices/auth/authSlice";
 import { useEffect, useState } from "react";
@@ -35,6 +35,10 @@ const SharedPage: NextPage = () => {
         setIsRenameModalVisible(false);
     }
 
+    const handleSearch = (query: string) => {
+        router.push(`/search?query=${query}`);
+    }
+
     return (
         <>
             <Modal isVisible={isRenameModalVisible} setIsVisible={setIsRenameModalVisible}
@@ -53,9 +57,12 @@ const SharedPage: NextPage = () => {
                 <div className={styles.home}>
                     <div className={styles.home__head}>
                         <div className={styles.home__block}>
-                            <MyInputWithLabel view="horizontal" styles={{ maxWidth: "40rem" }}>
-                                Search
-                            </MyInputWithLabel>
+                            <NameForm
+                                view="horizontal"
+                                labelText="Search"
+                                onSubmit={handleSearch}
+                                style={{ maxWidth: "50rem" }}
+                            />
 
                             <Profile user={user} />
                         </div>
@@ -87,7 +94,7 @@ const SharedPage: NextPage = () => {
 
 SharedPage.getInitialProps = wrapper.getInitialPageProps(store => async (ctx) => {
     await store.dispatch(fetchSharedFiles({ ctx }));
-    
+
     return {
         props: {}
     }
