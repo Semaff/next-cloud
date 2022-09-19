@@ -109,7 +109,7 @@ export const auth = createAsyncThunk<AuthResponse, AuthActionFields>("auth/check
         const response = await request.get("api/user/auth", {
             withCredentials: true,
             headers: {
-                Cookie: ctx.req?.headers.cookie || ""
+                Cookie: ctx.req?.headers.cookie || document.cookie
             }
         });
 
