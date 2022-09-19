@@ -13,14 +13,7 @@ import { wrapper } from "../store/store";
 import { selectFiles } from "../store/slices/files/filesSlice";
 import { createFolder, fetchFiles, renameFile } from "../store/slices/files/actions";
 import Uploader from "../components/Modal/Uploader/Uploader";
-
-const reservedNames = [
-    "signin",
-    "signup",
-    "profile",
-    "shared",
-    "search"
-];
+import { ERoutes } from "../types/ERoutes";
 
 const Home: NextPage = () => {
     const [isFolderModalVisible, setIsFolderModalVisible] = useState(false);
@@ -47,7 +40,7 @@ const Home: NextPage = () => {
 
     const handleCreateFolder = (name: string) => {
         setIsFolderModalVisible(false);
-        if (!reservedNames.includes(name.toLowerCase())) {
+        if (!ERoutes.includes(name.toLowerCase())) {
             return dispatch(createFolder({ path: router.asPath, name }));
         }
 
