@@ -54,7 +54,7 @@ const SearchPage: NextPage = () => {
                 />
             </Modal>
 
-            <MainLayoutWithLeftBar>
+            <MainLayoutWithLeftBar title={`${router.query.query} | CloudBox`}>
                 <div className={styles.home}>
                     <div className={styles.home__head}>
                         <div className={styles.home__block}>
