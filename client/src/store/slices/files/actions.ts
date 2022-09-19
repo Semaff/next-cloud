@@ -4,6 +4,8 @@ import { request } from "../../../api/requests";
 import { TFile } from "../../../types/TFile";
 import { CreateFolderActionFields, DeleteFileActionFields, FetchAllActionFields, MoveFileActionFields, RemoveShareFileActionFields, RenameFileActionFields, SearchActionFields, ShareFileActionFields, UploadFileActionFields } from "./types";
 import decodePath from "../../../utils/decodePath";
+import { addUploadFile, removeUploadFile, setUploaderIsVisible, updateUploadFile } from "../uploader/uploaderSlice";
+import { UploadFile } from "../../../types/UploadFile";
 
 /*
   Client Side Thunk Actions
@@ -22,13 +24,32 @@ export const createFolder = createAsyncThunk<TFile, CreateFolderActionFields>("f
     }
 });
 
-export const uploadFile = createAsyncThunk<TFile, UploadFileActionFields>("files/uploadFile", async ({ file, path }) => {
+export const uploadFile = createAsyncThunk<TFile, UploadFileActionFields>("files/uploadFile", async ({ file, path }, { dispatch }) => {
+    let uploadFile: UploadFile = { name: file.name, progress: 0, id: Date.now() };
+
     try {
         const formData = new FormData();
         formData.append("file", file);
-        const response = await request.post<TFile>("api/files/uploadFile?path=" + decodePath(path), formData);
+
+        dispatch(setUploaderIsVisible(true));
+        dispatch(addUploadFile(uploadFile));
+
+        const response = await request.post<TFile>("api/files/uploadFile?path=" + decodePath(path), formData, {
+            headers: {
+                Cookie: document.cookie
+            },
+            onUploadProgress(progressEvent) {
+                const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
+                if (totalLength) {
+                    uploadFile = { ...uploadFile, progress: Math.round((progressEvent.loaded * 100) / totalLength) };
+                    dispatch(updateUploadFile(uploadFile));
+                }
+            }
+        });
+
         return response.data;
     } catch (err) {
+        dispatch(removeUploadFile(uploadFile.id));
         if (err instanceof AxiosError) {
             return Promise.reject(`Error: ${err.response?.data.message}`);
         }
