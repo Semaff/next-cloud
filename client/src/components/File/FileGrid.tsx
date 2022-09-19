@@ -8,6 +8,8 @@ import { ESorts } from "../../types/ESorts";
 import ContextMenu from "../Modal/ContextMenu/ContextMenu";
 import { moveFile } from "../../store/slices/files/actions";
 import { getElementCoordinates } from "../../utils/getElementProperties";
+import { ERoutes } from "../../types/ERoutes";
+import { useRouter } from "next/router";
 
 /*
   Helper Functions
@@ -42,6 +44,7 @@ interface FileGridProps {
 }
 
 const FileGrid = ({ files, currentSort, selectedFiles, setSelectedFiles, setIsRenameModalVisible, onDragEnter }: FileGridProps) => {
+    const router = useRouter();
     const orderedFiles = sortFiles(files, currentSort);
     const fileGridRef = useRef(null);
     const dispatch = useAppDispatch();
@@ -65,7 +68,7 @@ const FileGrid = ({ files, currentSort, selectedFiles, setSelectedFiles, setIsRe
             setSelectedFiles([file]);
         }
 
-        if (!fileGridRef.current) {
+        if (!fileGridRef.current || ERoutes.includes(router.route.slice(1).toLowerCase())) {
             return;
         }
 
