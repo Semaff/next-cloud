@@ -7,6 +7,7 @@ import { cutLongWord } from "../../utils/cutLongWord";
 import { Share } from "../_SVG";
 import { Anchor } from "../../types/Anchor";
 import { getElementCoordinates } from "../../utils/getElementProperties";
+import { ERoutes } from "../../types/ERoutes";
 
 export interface FileProps {
     file: TFile;
@@ -64,7 +65,7 @@ const File = ({ file, fileGridRef, files, selectedFiles, setSelectedFiles, setAn
     }
 
     const handleDoubleClick = () => {
-        if (file.type === "dir") {
+        if (file.type === "dir" && !ERoutes.includes(router.route.slice(1).toLowerCase())) {
             setSelectedFiles([]);
             const parsedPath = router.asPath.slice(1);
             router.push(parsedPath + "/" + file.name);
