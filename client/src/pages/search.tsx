@@ -68,7 +68,7 @@ const SearchPage: NextPage = () => {
                             <Profile user={user} />
                         </div>
 
-                        <h1 className={styles.home__title}>Your Files</h1>
+                        <h1 className={styles.home__title}>Search results for: {router.query.query}</h1>
 
                         <div className={styles.home__block}>
                             <SortButtons
