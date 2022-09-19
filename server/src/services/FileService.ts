@@ -58,7 +58,7 @@ class FileService {
 
         const filteredFiles = files.filter(file => {
             const fileName = file.name.toLowerCase();
-            if (fileName.includes(query) && file.parent) {
+            if (fileName.includes(query.toLowerCase()) && file.parent) {
                 return true;
             }
 
