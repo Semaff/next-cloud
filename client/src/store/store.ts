@@ -2,11 +2,13 @@ import { Action, combineReducers, configureStore, ThunkAction } from "@reduxjs/t
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
 import authSlice from "./slices/auth/authSlice";
 import filesSlice from "./slices/files/filesSlice";
+import uploaderSlice from "./slices/uploader/uploaderSlice";
 
 /* Reducers */
 const combinedReducer = combineReducers({
     auth: authSlice,
-    files: filesSlice
+    files: filesSlice,
+    uploader: uploaderSlice
 });
 
 const reducer: typeof combinedReducer = (state, action) => {
