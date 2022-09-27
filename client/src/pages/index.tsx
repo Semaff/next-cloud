@@ -2,7 +2,7 @@ import styles from "../styles/pages/Home.module.scss";
 import MainLayoutWithLeftBar from "../layouts/MainLayoutWithLeftBar";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { ActionButtons, NameForm, Modal, Profile, SortButtons, FileGridWithDragNDrop, NameFormWithButton } from "../components";
+import { ActionButtons, NameForm, Modal, Profile, SortButtons, FileGridWithDragNDrop, NameFormWithButton, Uploader } from "../components";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { useTypedSelector } from "../hooks/useTypedSelector";
 import { selectIsLoggedIn, selectUser } from "../store/slices/auth/authSlice";
@@ -12,7 +12,6 @@ import { NextPage } from "next";
 import { wrapper } from "../store/store";
 import { selectFiles } from "../store/slices/files/filesSlice";
 import { createFolder, fetchFiles, renameFile } from "../store/slices/files/actions";
-import Uploader from "../components/Modal/Uploader/Uploader";
 import { ERoutes } from "../types/ERoutes";
 
 const Home: NextPage = () => {
@@ -73,9 +72,7 @@ const Home: NextPage = () => {
                 />
             </Modal>
 
-            <Uploader
-                isVisible={true}
-            />
+            <Uploader />
 
             <MainLayoutWithLeftBar>
                 <div className={styles.home}>
