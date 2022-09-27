@@ -1,6 +1,10 @@
 .profile {
     position: relative;
     margin-left: auto;
+
+    @media screen and (max-width: 920px) {
+      display: none;
+    }
 }
 
 .profile__logout {
