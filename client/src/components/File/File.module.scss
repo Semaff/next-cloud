@@ -1,133 +1,136 @@
 @import "../../styles/variables";
 
 .file__grid {
-    position: relative;
-    height: 100%;
+  position: relative;
+  height: 100%;
 }
 
 .file__grid-inner {
-    position: relative;
-    overflow-y: auto;
-    user-select: none;
+  position: relative;
+  overflow-y: auto;
+  user-select: none;
 
-    display: grid;
-    grid-template-columns: repeat(auto-fit, $file-maxwidth);
-    grid-template-rows: repeat(5, 1fr);
-    gap: 0.5rem;
-    height: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, $file-maxwidth);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 0.5rem;
+  height: 100%;
+
+  @media screen and (max-width: 350px) {
+    justify-content: space-around;
+  }
 }
 
 .file {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    position: relative;
-    width: 100%;
-    max-width: $file-maxwidth;
-    padding: 0.5rem;
-    border-radius: 5px;
-    position: relative;
-    text-align: center;
+  position: relative;
+  width: 100%;
+  max-width: $file-maxwidth;
+  padding: 0.5rem;
+  border-radius: 5px;
+  position: relative;
+  text-align: center;
+  object-fit: cover;
+
+  cursor: default;
+  user-select: none;
+
+  img {
     object-fit: cover;
+  }
 
-    cursor: default;
-    user-select: none;
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
 
-    img {
-        object-fit: cover;
-    }
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border-radius: 2px;
+    transition: background-color 0.2s linear;
+  }
 
+  &.selected,
+  &:hover {
     &::after {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 10;
-
-        content: "";
-        display: block;
-        width: 100%;
-        height: 100%;
-        background: transparent;
-        border-radius: 2px;
-        transition: background-color 0.2s linear;
+      background: rgba(#000, 0.1);
     }
+  }
 
-    &.selected,
-    &:hover {
-        &::after {
-            background: rgba(#000, 0.1);
-        }
-    }
-
-    &::selection {
-        background-color: transparent;
-    }
+  &::selection {
+    background-color: transparent;
+  }
 }
 
 .file__name,
 .file__size {
-    font-family: $ff-primary;
-    word-break: break-word;
+  font-family: $ff-primary;
+  word-break: break-word;
 }
 
 .file__name {
-    color: $secondary;
-    font-size: 1.3rem;
-    font-weight: 500;
+  color: $secondary;
+  font-size: 1.3rem;
+  font-weight: 500;
 }
 
 .file__size {
-    display: block;
-    font-size: 1.2rem;
-    color: grey;
+  display: block;
+  font-size: 1.2rem;
+  color: grey;
 }
 
 .file__share {
-    position: absolute;
-    right: 5%;
-    top: 2%;
+  position: absolute;
+  right: 5%;
+  top: 2%;
 }
 
 /* Drag & Drop area */
 .file__drop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 100;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
 
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    border: 2px dashed #000;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border: 2px dashed #000;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    cursor: default;
-    font-family: "Montserrat", sans-serif;
-    font-size: 2rem;
-    color: #000;
-    user-select: none;
+  cursor: default;
+  font-family: "Montserrat", sans-serif;
+  font-size: 2rem;
+  color: #000;
+  user-select: none;
 }
 
 /* File Mirage */
 .file__mirage {
-    position: relative;
+  position: relative;
 
-    &::after {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 10;
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
 
-        content: "";
-        display: block;
-        width: 100%;
-        height: 100%;
-        background: rgba(#000, 0.2);
-        border-radius: 0.5rem;
-        transition: background-color 0.2s linear;
-    }
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: rgba(#000, 0.2);
+    border-radius: 0.5rem;
+    transition: background-color 0.2s linear;
+  }
 }
