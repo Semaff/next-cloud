@@ -51,10 +51,6 @@ const authSlice = createSlice({
         builder
             /* Auth */
             .addCase(auth.fulfilled, handleAuth)
-            .addCase(auth.rejected, (state, action) => {
-                state.error = action.error.message || "Unexpected error!";
-                state.isLoading = false;
-            })
 
             /* Sign In */
             .addCase(signin.fulfilled, handleAuth)
