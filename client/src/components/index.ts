@@ -25,6 +25,7 @@ import Modal from "./Modal/Modal"
 import MiniModal from "./Modal/MiniModal"
 import Notifier from "./Modal/Notifier/Notifier"
 import ContextMenu from "./Modal/ContextMenu/ContextMenu"
+import Uploader from "./Modal/Uploader/Uploader"
 
 import Profile from "./Profile/Profile"
 
@@ -56,5 +57,6 @@ export {
     ContextMenu,
     FileMirage,
     MyUpload,
-    NameFormWithButton
+    NameFormWithButton,
+    Uploader
 }
