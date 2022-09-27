@@ -137,7 +137,7 @@ export const fetchFiles = createAsyncThunk<TFile[], FetchAllActionFields>("files
         }
         const response = await request.get<TFile[]>("api/files/getall?path=" + parsedPath, {
             headers: {
-                Cookie: ctx.req?.headers.cookie || document.cookie
+                Cookie: ctx.req?.headers.cookie || ""
             }
         });
         return response.data;
@@ -154,7 +154,7 @@ export const fetchSharedFiles = createAsyncThunk<TFile[], FetchAllActionFields>(
     try {
         const response = await request.get<TFile[]>("api/files/getall/shared", {
             headers: {
-                Cookie: ctx.req?.headers.cookie || document.cookie
+                Cookie: ctx.req?.headers.cookie || ""
             }
         });
         return response.data;
@@ -171,7 +171,7 @@ export const fetchFile = createAsyncThunk<TFile, FetchAllActionFields>("files/ge
     try {
         const response = await request.get<TFile>("api/files/getone/" + ctx.query.id, {
             headers: {
-                Cookie: ctx.req?.headers.cookie || document.cookie
+                Cookie: ctx.req?.headers.cookie || ""
             }
         });
         return response.data;
@@ -188,7 +188,7 @@ export const searchFiles = createAsyncThunk<TFile[], SearchActionFields>("files/
     try {
         const response = await request.get<TFile[]>("api/files/search?query=" + ctx.query.query, {
             headers: {
-                Cookie: ctx.req?.headers.cookie || document.cookie
+                Cookie: ctx.req?.headers.cookie || ""
             }
         });
 
