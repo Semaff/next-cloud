@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { selectUser } from "../../store/slices/auth/authSlice";
@@ -12,65 +12,77 @@ import ProgressBar from "../ProgressBar/ProgressBar";
 import LeftBarLink from "./LeftBarLink";
 
 const LeftBar = () => {
-    const dispatch = useAppDispatch();
-    const user = useTypedSelector(selectUser);
-    const router = useRouter();
+  const [isBurgerChecked, setIsBurgerChecked] = useState(false);
+  const dispatch = useAppDispatch();
+  const user = useTypedSelector(selectUser);
+  const router = useRouter();
 
-    const handleUploadFile = (e: ChangeEvent<HTMLInputElement>) => {
-        e.preventDefault();
-        const files = e.target.files;
-        if (!files) {
-            return;
-        }
-
-        for (let i = 0; i < files?.length; i++) {
-            const file = files[i];
-            dispatch(uploadFile({ path: router.asPath, file: file }));
-        }
+  const handleUploadFile = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const files = e.target.files;
+    if (!files) {
+      return;
     }
 
-    return (
-        <div className={styles.leftbar}>
-            <div className={styles.leftbar__logo}>
-                <Image
-                    style={{ cursor: "pointer" }}
-                    width={35}
-                    height={35}
-                    src="/logo.png"
-                    alt="file"
-                    onClick={() => router.push("/")}
-                />
-            </div>
+    for (let i = 0; i < files?.length; i++) {
+      const file = files[i];
+      dispatch(uploadFile({ path: router.asPath, file: file }));
+    }
+  }
 
-            <ul className={styles.leftbar__list}>
-                <MyUpload
-                    multiple
-                    name="upload"
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => handleUploadFile(e)}
-                >
-                    Upload File
-                </MyUpload>
+  return (
+    <div className={`${styles.leftbar} ${isBurgerChecked ? styles.active : ""}`}>
+      <div className={styles.leftbar__burger}>
+        <input
+          className={styles.leftbar__checkbox}
+          checked={isBurgerChecked}
+          onChange={e => setIsBurgerChecked(e.target.checked)}
+          type="checkbox"
+        />
 
-                <LeftBarLink path="/" img="/fileIcon.png">
-                    Files
-                </LeftBarLink>
+        <span />
+      </div>
 
-                <LeftBarLink path="/shared" img="/shared.png">
-                    Shared Files
-                </LeftBarLink>
+      <div className={styles.leftbar__logo}>
+        <Image
+          style={{ cursor: "pointer" }}
+          width={35}
+          height={35}
+          src="/logo.png"
+          alt="file"
+          onClick={() => router.push("/")}
+        />
+      </div>
 
-                <LeftBarLink path="/profile" img="/profile.png">
-                    Profile
-                </LeftBarLink>
-            </ul>
+      <ul className={styles.leftbar__list}>
+        <MyUpload
+          multiple
+          name="upload"
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleUploadFile(e)}
+        >
+          Upload File
+        </MyUpload>
 
-            <div className={styles.leftbar__footer}>
-                <span>Free: {formatSize((user?.diskSpace || 0) - (user?.usedSpace || 1))} </span>
-                <span>of {formatSize(user?.diskSpace || 0)}</span>
-                <ProgressBar progress={Math.ceil((user?.usedSpace || 0) / (user?.diskSpace || 1) * 100)} />
-            </div>
-        </div>
-    )
+        <LeftBarLink path="/" img="/fileIcon.png">
+          Files
+        </LeftBarLink>
+
+        <LeftBarLink path="/shared" img="/shared.png">
+          Shared Files
+        </LeftBarLink>
+
+        <LeftBarLink path="/profile" img="/profile.png">
+          Profile
+        </LeftBarLink>
+      </ul>
+
+      <div className={styles.leftbar__footer}>
+        <span>Free: {formatSize((user?.diskSpace || 0) - (user?.usedSpace || 1))} </span>
+        <span>of {formatSize(user?.diskSpace || 0)}</span>
+        <ProgressBar progress={Math.ceil((user?.usedSpace || 0) / (user?.diskSpace || 1) * 100)} />
+      </div>
+    </div>
+  )
 }
 
 export default LeftBar;
