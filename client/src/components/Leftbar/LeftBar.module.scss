@@ -1,58 +1,170 @@
 @import "../../styles/variables";
 
 .leftbar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
 
+  width: $leftbar-width;
+  height: 100%;
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+
+  background-color: $bg-primary;
+
+  transition: width .2s linear;
+
+  &.active {
     width: $leftbar-width;
-    height: 100%;
-    padding: 1rem;
 
-    display: flex;
-    flex-direction: column;
+    .leftbar__logo {
+      display: block;
+    }
 
-    background-color: $bg-primary;
+    .leftbar__list,
+    .leftbar__footer {
+      display: flex;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    width: 50px;
+
+    .leftbar__burger {
+      display: flex;
+    }
+
+    .leftbar__list,
+    .leftbar__logo,
+    .leftbar__footer {
+      display: none;
+    }
+  }
 }
 
 .leftbar__logo {
-    text-align: center;
-    margin-bottom: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
 .leftbar__list {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  list-style: none;
 }
 
 .leftbar__link {
-    font-family: $ff-primary;
-    font-size: 1.6rem;
-    color: $primary;
-    transition: color 0.2s linear;
+  font-family: $ff-primary;
+  font-size: 1.6rem;
+  color: $primary;
+  transition: color 0.2s linear;
 
-    a {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
+  a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 
-        font-family: inherit;
-        text-decoration: none;
-        color: inherit;
-    }
+    font-family: inherit;
+    text-decoration: none;
+    color: inherit;
+  }
 
-    &:hover,
-    &.active {
-        color: #ffffff;
-    }
+  &:hover,
+  &.active {
+    color: #ffffff;
+  }
 }
 
 .leftbar__footer {
-    font-size: 1.8rem;
-    font-weight: 400;
-    color: $primary;
-    margin-top: auto;
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: $primary;
+  margin-top: auto;
+
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/*
+  Burger
+  =========
+*/
+.leftbar__checkbox {
+  display: block;
+  width: 30px;
+  height: 23px;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  cursor: pointer;
+
+  opacity: 0; /* hide this */
+  z-index: 2; /* and place it over the hamburger */
+
+  -webkit-touch-callout: none;
+
+  &:checked ~ span {
+    opacity: 1;
+    transform: rotate(45deg) translate(-2px, -1px);
+  }
+
+  &:checked ~ span::before {
+    opacity: 0;
+    transform: rotate(0deg) scale(0.2, 0.2);
+  }
+
+  &:checked ~ span::after {
+    transform: rotate(-90deg) translate(0, -1px);
+  }
+}
+
+.leftbar__burger {
+  margin: 2rem auto;
+  position: relative;
+  width: 30px;
+  height: 23px;
+  z-index: 1;
+
+  border-radius: 3px;
+
+  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
+    opacity 0.55s ease;
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  span,
+  span::after,
+  span::before {
+    content: "";
+    display: block;
+    width: 30px;
+    height: 4px;
+
+    background: $bg-secondary;
+    border-radius: 3px;
+
+    z-index: 1;
+    transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
+      opacity 0.55s ease;
+  }
+
+  span::after,
+  span::before {
+    position: absolute;
+  }
+
+  span::after {
+    top: 0;
+  }
+
+  span::before {
+    bottom: 0;
+  }
 }
