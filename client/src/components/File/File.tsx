@@ -10,122 +10,126 @@ import { getElementCoordinates } from "../../utils/getElementProperties";
 import { ERoutes } from "../../types/ERoutes";
 
 export interface FileProps {
-    file: TFile;
-    fileGridRef: MutableRefObject<null | HTMLElement>;
-    files: TFile[];
+  file: TFile;
+  fileGridRef: MutableRefObject<null | HTMLElement>;
+  files: TFile[];
 
-    selectedFiles: TFile[];
-    setSelectedFiles: (files: TFile[]) => void;
+  selectedFiles: TFile[];
+  setSelectedFiles: (files: TFile[]) => void;
 
-    setAnchor: (anchor: Anchor | ((prev: Anchor) => Anchor)) => void;
-    setIsContextMenuOpen: (isContextMenuOpen: boolean | ((prev: boolean) => boolean)) => void;
+  setAnchor: (anchor: Anchor | ((prev: Anchor) => Anchor)) => void;
+  setIsContextMenuOpen: (isContextMenuOpen: boolean | ((prev: boolean) => boolean)) => void;
 
-    onMouseDown?: (e: MouseEvent<HTMLElement>, file: TFile) => void;
-    onMouseUp?: (e: MouseEvent<HTMLElement>, file?: TFile) => void;
+  onMouseDown?: (e: MouseEvent<HTMLElement>, file: TFile) => void;
+  onMouseUp?: (e: MouseEvent<HTMLElement>, file?: TFile) => void;
 }
 
 const File = ({ file, fileGridRef, files, selectedFiles, setSelectedFiles, setAnchor, setIsContextMenuOpen, onMouseDown, onMouseUp }: FileProps) => {
-    const isSelected = selectedFiles.find(fileEl => fileEl.id === file.id);
-    const isImage = file.type === "image";
-    const isDir = file.type === "dir";
-    const router = useRouter();
+  const isSelected = selectedFiles.find(fileEl => fileEl.id === file.id);
+  const isImage = file.type === "image";
+  const isDir = file.type === "dir";
+  const isBackFolder = file.name === "..";
+  const router = useRouter();
 
-    /* Mouse Events */
-    const handleClick = (e: MouseEvent<HTMLDivElement>) => {
-        e.stopPropagation();
-        setIsContextMenuOpen(false);
-        if (!e.ctrlKey && !e.shiftKey) {
-            return setSelectedFiles([file]);
-        }
-
-        if (e.shiftKey) {
-            const startPoint = files.indexOf(selectedFiles[0]) || 0;
-            const endPoint = files.indexOf(file) || 0;
-
-            const isGreater = startPoint < endPoint;
-            const newSelectedFiles: TFile[] = [];
-            if (isGreater) {
-                for (let i = startPoint; i <= endPoint; i++) {
-                    newSelectedFiles.push(files[i]);
-                }
-            } else {
-                for (let i = endPoint; i <= startPoint; i++) {
-                    newSelectedFiles.push(files[i]);
-                }
-            }
-
-            return setSelectedFiles(newSelectedFiles);
-        }
-
-        if (isSelected) {
-            setSelectedFiles([...selectedFiles.filter(fileEl => fileEl.id !== file.id)]);
-        } else {
-            setSelectedFiles([...selectedFiles, file]);
-        }
+  /* Mouse Events */
+  const handleClick = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setIsContextMenuOpen(false);
+    if (!e.ctrlKey && !e.shiftKey) {
+      return setSelectedFiles([file]);
     }
 
-    const handleDoubleClick = () => {
-        if (file.type === "dir" && !ERoutes.includes(router.route.slice(1).toLowerCase())) {
-            setSelectedFiles([]);
-            const parsedPath = router.asPath.slice(1);
-            router.push(parsedPath + "/" + file.name);
+    if (e.shiftKey) {
+      const startPoint = files.indexOf(selectedFiles[0]) || 0;
+      const endPoint = files.indexOf(file) || 0;
+
+      const isGreater = startPoint < endPoint;
+      const newSelectedFiles: TFile[] = [];
+      if (isGreater) {
+        for (let i = startPoint; i <= endPoint; i++) {
+          newSelectedFiles.push(files[i]);
         }
+      } else {
+        for (let i = endPoint; i <= startPoint; i++) {
+          newSelectedFiles.push(files[i]);
+        }
+      }
+
+      return setSelectedFiles(newSelectedFiles);
     }
 
-    const handleContextMenu = (e: MouseEvent<HTMLDivElement>, file: TFile) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setSelectedFiles([file]);
+    if (isSelected) {
+      setSelectedFiles([...selectedFiles.filter(fileEl => fileEl.id !== file.id)]);
+    } else {
+      setSelectedFiles([...selectedFiles, file]);
+    }
+  }
 
-        if (!fileGridRef.current) {
-            return;
-        }
+  const handleDoubleClick = () => {
+    if (file.type === "dir" && !ERoutes.includes(router.route.slice(1).toLowerCase())) {
+      setSelectedFiles([]);
+      const parsedPath = router.asPath.slice(1);
+      router.push(parsedPath + "/" + file.name);
+    }
+  }
 
-        const { offsetX, offsetY } = getElementCoordinates(fileGridRef.current);
-        setIsContextMenuOpen(false);
-        const newPosition = {
-            x: e.pageX - offsetX,
-            y: e.pageY - offsetY,
-        };
+  const handleContextMenu = (e: MouseEvent<HTMLDivElement>, file: TFile) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedFiles([file]);
 
-        setAnchor(newPosition);
-        setIsContextMenuOpen(true);
+    if (!fileGridRef.current) {
+      return;
     }
 
-    return (
-        <div
-            onClick={handleClick}
-            onDoubleClick={handleDoubleClick}
-            onContextMenu={e => handleContextMenu(e, file)}
+    const { offsetX, offsetY } = getElementCoordinates(fileGridRef.current);
+    setIsContextMenuOpen(false);
+    const newPosition = {
+      x: e.pageX - offsetX,
+      y: e.pageY - offsetY,
+    };
 
-            onMouseDown={onMouseDown ? (e) => onMouseDown(e, file) : () => ({})}
-            onMouseUp={onMouseUp ? (e) => onMouseUp(e, file) : () => ({})}
+    setAnchor(newPosition);
+    setIsContextMenuOpen(true);
+  }
 
-            className={`${styles.file} ${isSelected ? styles.selected : ""}`}
-            title={file.name}
-            unselectable="on"
-        >
-            <img
-                className={styles.file__image}
-                width={70}
-                height={80}
-                src={isImage
-                    ? `${process.env.NEXT_PUBLIC_SERVER_URL}/${file.path}`
-                    : isDir ? "/folder.png" : "/file.png"
-                }
-                alt="file"
-            />
+  return (
+    <div
+      onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
+      onContextMenu={e => handleContextMenu(e, file)}
 
-            {file.accessLink && (
-                <div className={styles.file__share}>
-                    <Share />
-                </div>
-            )}
+      onMouseDown={onMouseDown ? (e) => onMouseDown(e, file) : () => ({})}
+      onMouseUp={onMouseUp ? (e) => onMouseUp(e, file) : () => ({})}
 
-            <span className={styles.file__name}>{cutLongWord(file.name)}</span>
-            <span className={styles.file__size}>{formatSize(file.size)}</span>
+      className={`${styles.file} ${isSelected ? styles.selected : ""}`}
+      title={file.name}
+      unselectable="on"
+    >
+      <img
+        className={styles.file__image}
+        width={70}
+        height={80}
+        src={isImage
+          ? `${process.env.NEXT_PUBLIC_SERVER_URL}/${file.path}`
+          : isDir ? "/folder.png" : "/file.png"
+        }
+        alt="file"
+      />
+
+      {file.accessLink && (
+        <div className={styles.file__share}>
+          <Share />
         </div>
-    )
+      )}
+
+      <span className={styles.file__name}>{cutLongWord(file.name)}</span>
+
+      {!isBackFolder && (
+        <span className={styles.file__size}>{formatSize(file.size)}</span>
+      )}
+    </div>
+  )
 }
 
 export default File;
