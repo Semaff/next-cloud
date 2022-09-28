@@ -72,6 +72,10 @@ const FileGrid = ({ files, currentSort, selectedFiles, setSelectedFiles, setIsRe
   }
 
   const handleMouseDown = (e: MouseEvent<HTMLElement>, file: TFile) => {
+    if (file.name === "..") {
+      return;
+    }
+
     if (selectedFiles.length <= 1 && !e.ctrlKey && !e.shiftKey) {
       setSelectedFiles([file]);
     }

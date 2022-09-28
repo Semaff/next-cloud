@@ -35,6 +35,10 @@ const File = ({ file, fileGridRef, files, selectedFiles, setSelectedFiles, setAn
   const handleClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setIsContextMenuOpen(false);
+    if (isBackFolder) {
+      return;
+    }
+
     if (!e.ctrlKey && !e.shiftKey) {
       return setSelectedFiles([file]);
     }
