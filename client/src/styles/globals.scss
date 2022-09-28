@@ -43,6 +43,7 @@ body {
   box-shadow: 0 0 10px rgba(#000, 0.5);
 
   &.--small {
+    min-height: 360px;
     max-width: 50rem;
     border-radius: 1rem;
     height: unset;
