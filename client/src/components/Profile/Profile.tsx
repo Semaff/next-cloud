@@ -9,41 +9,49 @@ import { useRouter } from "next/router";
 import { changePassword, logout } from "../../store/slices/auth/actions";
 
 interface ProfileProps {
-    user: TUser | null;
+  user: TUser | null;
 }
 
 const Profile = ({ user }: ProfileProps) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const dispatch = useAppDispatch();
-    const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
-    const handleChangePassword = (newPassword: string) => {
-        dispatch(changePassword({ newPassword }))
-    }
+  const handleChangePassword = (newPassword: string) => {
+    dispatch(changePassword({ newPassword }))
+  }
 
-    const handleLogout = () => {
-        dispatch(logout());
-        router.push("/signin");
-    }
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/signin");
+  }
 
-    return (
-        <div className={styles.profile}>
-            <MyButton className="--filled" onClick={() => setIsOpen(prev => !prev)}>
-                {user?.firstname} {user?.lastname}
-                <span className="arrow" />
-            </MyButton>
+  return (
+    <div className={styles.profile}>
+      <MyButton className="--filled" onClick={() => setIsOpen(prev => !prev)}>
+        {user?.firstname} {user?.lastname}
+        <span className="arrow" />
+      </MyButton>
 
-            <MiniModal isVisible={isOpen} style={{ minWidth: "28rem", maxWidth: "40rem", right: "0", top: "120%" }}>
-                <ChangePasswordForm onSubmit={handleChangePassword} />
+      <MiniModal
+        testid="profile-minimodal"
+        isVisible={isOpen}
+        style={{
+          minWidth: "28rem",
+          maxWidth: "40rem",
+          right: "0",
+          top: "120%"
+        }}>
+        <ChangePasswordForm onSubmit={handleChangePassword} />
 
-                <div className={styles.profile__logout}>
-                    <MyButton className={`--nofill --font-small`} onClick={handleLogout}>
-                        Logout
-                    </MyButton>
-                </div>
-            </MiniModal>
+        <div data-testid="profile-logout" className={styles.profile__logout}>
+          <MyButton className={`--nofill --font-small`} onClick={handleLogout}>
+            Logout
+          </MyButton>
         </div>
-    )
+      </MiniModal>
+    </div>
+  )
 }
 
 export default Profile;
