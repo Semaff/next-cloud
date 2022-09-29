@@ -31,9 +31,10 @@ const LeftBar = () => {
   }
 
   return (
-    <div className={`${styles.leftbar} ${isBurgerChecked ? styles.active : ""}`}>
-      <div className={styles.leftbar__burger}>
+    <div data-testid="leftbar" className={`${styles.leftbar} ${isBurgerChecked ? styles.active : ""}`}>
+      <div data-testid="leftbar-burger" className={styles.leftbar__burger}>
         <input
+          data-testid="leftbar-burger-input"
           className={styles.leftbar__checkbox}
           checked={isBurgerChecked}
           onChange={e => setIsBurgerChecked(e.target.checked)}
@@ -43,7 +44,7 @@ const LeftBar = () => {
         <span />
       </div>
 
-      <div className={styles.leftbar__logo}>
+      <div data-testid="leftbar-logo" className={styles.leftbar__logo}>
         <Image
           style={{ cursor: "pointer" }}
           width={35}
