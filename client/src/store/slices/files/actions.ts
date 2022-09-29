@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { request } from "../../../api/requests";
 import { TFile } from "../../../types/TFile";
 import { CreateFolderActionFields, DeleteFileActionFields, FetchAllActionFields, MoveFileActionFields, RemoveShareFileActionFields, RenameFileActionFields, SearchActionFields, ShareFileActionFields, UploadFileActionFields } from "./types";
-import decodePath from "../../../utils/decodePath";
+import decodePath from "../../../utils/decodePath/decodePath";
 import { addUploadFile, removeUploadFile, setUploaderIsVisible, updateUploadFile } from "../uploader/uploaderSlice";
 import { UploadFile } from "../../../types/UploadFile";
 

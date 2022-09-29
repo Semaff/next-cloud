@@ -1,12 +1,12 @@
 import styles from "./File.module.scss";
-import formatSize from "../../utils/formatSize";
+import formatSize from "../../utils/formatSize/formatSize";
 import { TFile } from "../../types/TFile";
 import { useRouter } from "next/router";
 import { MouseEvent, MutableRefObject } from "react";
-import { cutLongWord } from "../../utils/cutLongWord";
+import { cutLongWord } from "../../utils/cutLongWord/cutLongWord";
 import { Share } from "../_SVG";
 import { Anchor } from "../../types/Anchor";
-import { getElementCoordinates } from "../../utils/getElementProperties";
+import { getElementCoordinates } from "../../utils/getElementProperties/getElementProperties";
 import { ERoutes } from "../../types/ERoutes";
 
 export interface FileProps {

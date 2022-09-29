@@ -7,7 +7,7 @@ import FileMirage from "./FileMirage";
 import { ESorts } from "../../types/ESorts";
 import ContextMenu from "../Modal/ContextMenu/ContextMenu";
 import { moveFile } from "../../store/slices/files/actions";
-import { getElementCoordinates } from "../../utils/getElementProperties";
+import { getElementCoordinates } from "../../utils/getElementProperties/getElementProperties";
 import { ERoutes } from "../../types/ERoutes";
 import { useRouter } from "next/router";
 
@@ -104,7 +104,6 @@ const FileGrid = ({ files, currentSort, selectedFiles, setSelectedFiles, setIsRe
 
     if (isDragging) {
       const parentId = file.id;
-      console.log(selectedFiles, file);
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
         dispatch(moveFile({ fileId: file.id, parentId }))

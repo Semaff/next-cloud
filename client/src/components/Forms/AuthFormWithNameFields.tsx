@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import { onlyLettersPattern } from "../../utils/RegExps";
+import { onlyLettersPattern } from "../../utils/regExps/regExps";
 import MyInputWithLabel from "../Inputs/MyInputWithLabel";
 import AuthForm, { FormProps } from "./AuthForm";
 

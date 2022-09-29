@@ -6,7 +6,7 @@ import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { selectUser } from "../../store/slices/auth/authSlice";
 import { uploadFile } from "../../store/slices/files/actions";
 import styles from "./LeftBar.module.scss";
-import formatSize from "../../utils/formatSize";
+import formatSize from "../../utils/formatSize/formatSize";
 import MyUpload from "../Inputs/MyUpload";
 import ProgressBar from "../ProgressBar/ProgressBar";
 import LeftBarLink from "./LeftBarLink";

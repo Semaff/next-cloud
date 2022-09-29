@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, ReactNode, useState } from "react";
-import { emailPattern, passwordPattern } from "../../utils/RegExps";
+import { emailPattern, passwordPattern } from "../../utils/regExps/regExps";
 import MyInputWithLabel from "../Inputs/MyInputWithLabel";
 
 export interface FormProps {

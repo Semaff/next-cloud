@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import { passwordPattern } from "../../utils/RegExps";
+import { passwordPattern } from "../../utils/regExps/regExps";
 import MyButton from "../Buttons/MyButton";
 import MyInputWithLabel from "../Inputs/MyInputWithLabel";
 
