@@ -1,34 +1,54 @@
 .profile {
-    padding: 6rem;
+  padding: 6rem;
 }
 
 .profile__avatar {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .profile__btns {
-    display: flex;
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
 
-    &.--horizontal {
-        flex-direction: row;
-    }
+  &.--horizontal {
+    flex-direction: row;
+  }
 }
 
 .profile__info {
-    margin: 1rem 0;
-    
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  margin: 1rem 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.profile__activation {
+  text-align: center;
 }
 
 .profile__name {
-    font-size: 1.8rem;
-    color: #000;
-    font-family: 'Montserrat', sans-serif;
+  display: block;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.profile__name,
+.profile__activation {
+  font-size: 1.8rem;
+  color: #000;
+  font-family: "Montserrat", sans-serif;
+}
+
+.profile__form {
+  width: 100%;
+  max-width: 53rem;
+  margin: 1rem auto;
+  border: 1px dashed #e1e1e1;
+  padding: 1rem;
 }
