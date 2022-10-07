@@ -6,4 +6,4 @@ A Cloud Database made with Next.js/ReduxWrapper + Node.js/Express/Sequelize (Pos
 
 ![image](https://user-images.githubusercontent.com/95703321/190229128-74aeddce-8970-43be-8c4f-3a3dc7791f99.png)
 
-![image](https://user-images.githubusercontent.com/95703321/190229170-e00057fb-caee-4b50-92df-002d05edbdbe.png)
+![image](https://user-images.githubusercontent.com/95703321/194647877-f666769c-c8aa-4fd4-b5f5-3e84479c0690.png)
