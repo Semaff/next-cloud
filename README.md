@@ -1,6 +1,8 @@
 # next-cloud
 
-A Cloud Database made with Next.js/ReduxWrapper + Node.js/Express/Sequelize (PostgreSQL)
+Cloud Database
+
+Made with Next.js/ReduxWrapper + Node.js/Express/Sequelize (PostgreSQL)
 
 ![image](https://user-images.githubusercontent.com/95703321/190229246-c5eb25ae-b790-4532-af29-05e068c76ca3.png)
 
